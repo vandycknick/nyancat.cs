@@ -4,13 +4,18 @@ using System.Runtime.InteropServices;
 namespace Nyancat.Native
 {
     [Flags]
-    enum ConsoleModes : uint
+    enum ConsoleModeInputFlags : uint
     {
         EnableMouseInput = 16,
         EnableQuickEditMode = 64,
         EnableExtendedFlags = 128,
+    }
 
+    [Flags]
+    enum ConsoleModeOutputFlags : uint
+    {
         EnableVirtualTerminalProcessing = 4,
+        EnableNewLineAutoReturn = 8,
     }
 
     public static class WindowsConsole
@@ -46,7 +51,8 @@ namespace Nyancat.Native
                 return false;
             }
 
-            uint newConsoleMode = OriginalConsoleMode | (uint)ConsoleModes.EnableVirtualTerminalProcessing;
+            uint newConsoleMode = OriginalConsoleMode | (uint)ConsoleModeOutputFlags.EnableVirtualTerminalProcessing
+                                    | (uint) ConsoleModeOutputFlags.EnableNewLineAutoReturn;
 
             if (!SetConsoleMode(stdOutHandle, newConsoleMode))
             {

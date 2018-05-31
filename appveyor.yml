@@ -1,16 +1,25 @@
-version: '0.1.0.{build}'
-image: Visual Studio 2017
+version: 1.1.0.{build}
+os: Visual Studio 2017
 branches:
   only:
-  - master
-clone_depth: 1
-init:
-  - ps: git config --global core.autocrlf true
+    - master
 install:
-  # Install repo specific stuff here
-before_build:
-  # Display .NET Core version
-  - ps: dotnet --version
-  - ps: dotnet restore ./Nyancat/Nyancat.csproj
+  - ps: iwr https://get.dot.net/v1/dotnet-install.ps1 -outfile dotnet-install.ps1
+  - ps: .\dotnet-install.ps1 -Version 2.1.300 -InstallDir $env:ProgramFiles/dotnet
 build_script:
-  - ps: dotnet pack .\Nyancat\Nyancat.csproj -o ../artifacts
+  - ps: .\build.ps1 -IsOfficialBuild
+environment:
+  global:
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+    DOTNET_CLI_TELEMETRY_OPTOUT: 1
+test: off
+artifacts:
+  - path: 'artifacts\*.nupkg'
+    name: Packages
+    type: NuGetPackages
+# deploy:
+#   - provider: NuGet
+#     name: myget
+#     artifact: Packages
+#     api_key:
+#       secure: adddhere

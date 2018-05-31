@@ -52,14 +52,12 @@ namespace Nyancat
                 {
                     min_col = (FRAME_WIDTH - width / 2) / 2;
                     max_col = (FRAME_WIDTH + width / 2) / 2;
-                    // using_automatic_width = 1;
                 }
 
                 if (min_row == max_row)
                 {
                     min_row = (FRAME_HEIGHT - height - 1) / 2;
                     max_row = (FRAME_HEIGHT + height - 1) / 2;
-                    // using_automatic_height = 1;
                 }
 
                 Console.Clear();
@@ -70,7 +68,7 @@ namespace Nyancat
                     {
                         var frameId = Animation.Frames.IndexOf(frame);
 
-                        // var ff = Animation.Frames.ElementAt(frameId);
+                        device.Fill(' ',colors[',']);
 
                         for (var row = min_row; row < max_row; row++)
                         {
@@ -83,10 +81,10 @@ namespace Nyancat
                                 if (row > 23 && row < 43 && col < 0)
                                 {
                                     /*
-                                    //  * Generate the rainbow tail.
-                                    //  *
-                                    //  * This is done with a prettrow simplistic square wave.
-                                    //  */
+                                     * Generate the rainbow tail.
+                                     *
+                                     * This is done with a prettrow simplistic square wave.
+                                     */
                                     int mod_x = ((-col + 2) % 16) / 8;
 
                                     if ((frameId / 2) % 2 == 0)
@@ -94,9 +92,9 @@ namespace Nyancat
                                         mod_x = 1 - mod_x;
                                     }
 
-                                    // /*
-                                    //  * Our rainbow, with some padding.
-                                    //  */
+                                    /*
+                                     * Our rainbow, with some padding.
+                                     */
                                     string rainbow = ",,>>&&&+++###==;;;,,";
 
                                     var index = mod_x + row - 23;
@@ -105,8 +103,6 @@ namespace Nyancat
                                         index = 0;
 
                                     color = rainbow[index];
-                                    // color = rainbow[0];
-                                    // if (color == 0) color = ',';
                                 }
                                 else if (col < 0 || row < 0 || row >= Animation.FRAME_HEIGHT || col >= Animation.FRAME_WIDTH)
                                 {
@@ -122,13 +118,11 @@ namespace Nyancat
                                 colFilled+=2;
                             }
 
-                            for (var rest = colFilled; rest < width; rest++)
-                            {
-                                device.WriteChar(' ',colors[',']);
-                            }
+                            device.NewLine();
                         }
 
                         device.SwapBuffers();
+                        Thread.Sleep(5);
                     }
                 }
 

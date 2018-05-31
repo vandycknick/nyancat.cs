@@ -47,6 +47,21 @@ namespace Nyancat
             crow = 0;
         }
 
+        public void Fill(char rune, string color)
+        {
+            for (var row = 0; row < rows; row++)
+            {
+                for (var col = 0; col < cols; col++)
+                {
+                    backBuffer[row, col] = new CharPoint()
+                    {
+                        Character = rune,
+                        Color = color,
+                    };
+                }
+            }
+        }
+
         public void WriteChar(char rune, string color)
         {
             if (ccol >= cols || crow >= rows)
@@ -67,6 +82,15 @@ namespace Nyancat
             }
         }
 
+        public void NewLine()
+        {
+            ccol = 0;
+            crow++;
+
+            if (crow == rows)
+                crow=0;
+        }
+
         public void SwapBuffers()
         {
             for (var row = 0; row < rows; row++)
@@ -83,6 +107,10 @@ namespace Nyancat
                         string line = back.Color + back.Character;
 
                         int nextCol = col + 1;
+
+                        if (nextCol >= cols) 
+                            continue;
+
                         CharPoint current = back;
                         CharPoint next = backBuffer[row, nextCol];
 

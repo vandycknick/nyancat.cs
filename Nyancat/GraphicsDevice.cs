@@ -80,7 +80,26 @@ namespace Nyancat
                     {
                         Console.CursorTop = row;
                         Console.CursorLeft = col;
-                        Console.Write(back.Color + back.Character);
+                        string line = back.Color + back.Character;
+
+                        int nextCol = col + 1;
+                        CharPoint current = back;
+                        CharPoint next = backBuffer[row, nextCol];
+
+                        while (current.Character == next.Character && current.Color == next.Color)
+                        {
+                            line += next.Character;
+                            col++;
+                            nextCol = col + 1;
+
+                            if (nextCol >= cols)
+                                break;
+
+                            current = next;
+                            next = backBuffer[row, nextCol];
+                        }
+
+                        Console.Write(line);
                     }
 
                 }

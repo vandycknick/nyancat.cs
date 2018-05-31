@@ -1,0 +1,16 @@
+version: '0.1.0.{build}'
+image: Visual Studio 2017
+branches:
+  only:
+  - master
+clone_depth: 1
+init:
+  - ps: git config --global core.autocrlf true
+install:
+  # Install repo specific stuff here
+before_build:
+  # Display .NET Core version
+  - ps: dotnet --version
+  - ps: dotnet restore ./Nyancat/Nyancat.csproj
+build_script:
+  - ps: dotnet pack .\Nyancat\Nyancat.csproj -o ../artifacts

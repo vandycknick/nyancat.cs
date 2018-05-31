@@ -1,10 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageVersion>0.1.0</PackageVersion>
+  <PackageVersion>0.1.0</PackageVersion>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
+    <ToolCommandName>nyancat</ToolCommandName>
+    <AssemblyName>nyancat</AssemblyName>
   </PropertyGroup>
 
 </Project>

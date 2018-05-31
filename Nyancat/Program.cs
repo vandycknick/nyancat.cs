@@ -70,6 +70,8 @@ namespace Nyancat
                     {
                         var frameId = Animation.Frames.IndexOf(frame);
 
+                        // var ff = Animation.Frames.ElementAt(frameId);
+
                         for (var row = min_row; row < max_row; row++)
                         {
                             int colFilled = 0;

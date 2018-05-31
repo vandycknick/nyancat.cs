@@ -29,15 +29,15 @@ namespace Nyancat.Native
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern IntPtr GetStdHandle(int nStdHandle);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true)]
         static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true)]
         static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 
         static uint OriginalConsoleMode = 0;
 
-        public static bool ConsoleEnableVirtualTerminalProcessing()
+        public static bool EnableVirtualTerminalProcessing()
         {
             var stdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 

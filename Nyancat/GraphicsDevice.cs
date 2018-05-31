@@ -30,7 +30,7 @@ namespace Nyancat
         public GraphicsDevice()
         {
             if (Platform.IsWindows())
-                WindowsConsole.ConsoleEnableVirtualTerminalProcessing();
+                WindowsConsole.EnableVirtualTerminalProcessing();
 
             Init();
         }

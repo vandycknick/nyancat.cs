@@ -44,4 +44,13 @@ exec dotnet pack `
     --no-build `
     -o $artifacts @MSBuildArgs
 
-write-host -f magenta 'Done'
+exec dotnet publish `
+    -r win-x64 @MSBuildArgs
+
+exec dotnet publish `
+    -r linux-x64 @MSBuildArgs
+
+exec dotnet publish `
+    -r osx-x64 @MSBuildArgs
+
+Write-Host -f magenta 'Done'

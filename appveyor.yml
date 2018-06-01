@@ -9,9 +9,9 @@ install:
 build_script:
   - ps: .\build.ps1 -IsOfficialBuild
 after_build:
-  - ps: 7z artifacts/nyancat-winx64-$(appveyor_build_version).zip .build/bin/Release/win-x64/publish
-  - ps: 7z artifacts/nyancat-linux-$(appveyor_build_version).zip .build/bin/Release/linux-x64/publish
-  - ps: 7z artifacts/nyancat-osx-$(appveyor_build_version).zip .build/bin/Release/osx-x64/publish
+  - ps: 7z artifacts/nyancat-winx64-$APPVEYOR_BUILD_VERSION.zip .build/bin/Release/win-x64/publish
+  - ps: 7z artifacts/nyancat-linux-$APPVEYOR_BUILD_VERSION.zip .build/bin/Release/linux-x64/publish
+  - ps: 7z artifacts/nyancat-osx-$APPVEYOR_BUILD_VERSION.zip .build/bin/Release/osx-x64/publish
 environment:
   global:
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true

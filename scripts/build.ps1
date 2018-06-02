@@ -11,12 +11,12 @@ Set-StrictMode -Version 1
 $ErrorActionPreference = 'Stop'
 
 function exec([string]$_cmd) {
-    write-host -ForegroundColor DarkGray ">>> $_cmd $args"
+    Write-Host ">>> $_cmd $args" -ForegroundColor Cyan
     $ErrorActionPreference = 'Continue'
     & $_cmd @args
     $ErrorActionPreference = 'Stop'
     if ($LASTEXITCODE -ne 0) {
-        write-error "Failed with exit code $LASTEXITCODE"
+        Write-Error "Failed with exit code $LASTEXITCODE"
         exit 1
     }
 }

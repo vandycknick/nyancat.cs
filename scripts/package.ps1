@@ -22,10 +22,13 @@ $rids = @(
     "osx-x64"
 )
 
+[xml]$manifest = Get-Content "$PSScriptRoot/../Version.props"
+$version = "$($manifest.Project.PropertyGroup.VersionPrefix)"
+
 foreach($id in $rids)
 {
     $path = (Get-Location).Path
-    $zipFile = "$path/artifacts/nyancat-$id-$APPVEYOR_BUILD_NUMBER.zip" 
+    $zipFile = "$path/artifacts/nyancat.$id.$version.zip" 
 
     try
     {
@@ -33,19 +36,19 @@ foreach($id in $rids)
         if (Test-Path -Path $zipFile)
         {
             Write-Host "Artifact '$zipfile' already exists, removing ..." -ForegroundColor Cyan
-            Remove-Item -Path "artifacts/nyancat-$id-$APPVEYOR_BUILD_NUMBER.zip"
+            Remove-Item -Path $zipFile
         }
     
         Write-Host "Creating $zipFile" -ForegroundColor Cyan
     
         [System.IO.Compression.ZipFile]::CreateFromDirectory(
             ".build/bin/Nyancat/$Configuration/netcoreapp2.1/$id/publish",
-            "artifacts/nyancat-$id-$APPVEYOR_BUILD_NUMBER.zip" 
+            $zipFile
         )
     }
     catch
     {
-        Write-Host "Something went wrong!" -ForegroundColor Red
+        Write-Error "Something went wrong!" -ForegroundColor Red
         exit 1
     }
 }

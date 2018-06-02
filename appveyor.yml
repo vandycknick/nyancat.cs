@@ -7,11 +7,9 @@ install:
   - ps: iwr https://get.dot.net/v1/dotnet-install.ps1 -outfile dotnet-install.ps1
   - ps: .\dotnet-install.ps1 -Version 2.1.300 -InstallDir $env:ProgramFiles/dotnet
 build_script:
-  - ps: .\build.ps1 -IsOfficialBuild
+  - ps: .\scripts\build.ps1 -IsOfficialBuild
 after_build:
-  - ps: 7z a "artifacts/nyancat-winx64-$APPVEYOR_BUILD_VERSION.zip" .build/bin/Nyancat/Release/netcoreapp2.1/win-x64/publish
-  - ps: 7z a "artifacts/nyancat-linux-$APPVEYOR_BUILD_VERSION.zip" .build/bin/Nyancat/Release/netcoreapp2.1/linux-x64/publish
-  - ps: 7z a "artifacts/nyancat-osx-$APPVEYOR_BUILD_VERSION.zip" .build/bin/Nyancat/Release/netcoreapp2.1/osx-x64/publish
+  - ps: .\scripts\package.ps1 -IsOfficialBuild
 environment:
   global:
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
@@ -24,7 +22,7 @@ artifacts:
   - path: 'artifacts\*.zip'
     name: Binaries
 deploy:
-  release: nyancat-v$(appveyor_build_version)
+  release: nyancat-v$(APPVEYOR_BUILD_VERSION)
   description: 'Release description'
   provider: GitHub
   auth_token:

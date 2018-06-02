@@ -34,7 +34,7 @@ if ($IsOfficialBuild) {
 	$MSBuildArgs += '-p:CI=true'
 }
 
-$artifacts = "$PSScriptRoot/artifacts/"
+$artifacts = "$PSScriptRoot/../artifacts/"
 
 Remove-Item -Recurse $artifacts -ErrorAction Ignore
 
@@ -53,4 +53,4 @@ exec dotnet publish `
 exec dotnet publish `
     -r osx-x64 @MSBuildArgs
 
-Write-Host -f magenta 'Done'
+Write-Host 'Done' -ForegroundColor Magenta

@@ -42,13 +42,13 @@ foreach($id in $rids)
         Write-Host "Creating $zipFile" -ForegroundColor Cyan
     
         [System.IO.Compression.ZipFile]::CreateFromDirectory(
-            ".build/bin/Nyancat/$Configuration/netcoreapp2.1/$id/publish",
+            "$path/.build/bin/Nyancat/$Configuration/netcoreapp2.1/$id/publish",
             $zipFile
         )
     }
     catch
     {
-        Write-Error "Something went wrong!" -ForegroundColor Red
+        Write-Error "Something went wrong!"
         exit 1
     }
 }

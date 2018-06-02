@@ -24,20 +24,30 @@ $rids = @(
 
 foreach($id in $rids)
 {
-    $zipFile = "artifacts/nyancat-$id-$APPVEYOR_BUILD_NUMBER.zip" 
+    $path = (Get-Location).Path
+    $zipFile = "$path/artifacts/nyancat-$id-$APPVEYOR_BUILD_NUMBER.zip" 
 
-    if (Test-Path -Path $zipFile)
+    try
     {
-        Write-Host "Artifact '$zipfile' already exists, removing ..." -ForegroundColor Cyan
-        Remove-Item -Path "artifacts/nyancat-$id-$APPVEYOR_BUILD_NUMBER.zip"
+
+        if (Test-Path -Path $zipFile)
+        {
+            Write-Host "Artifact '$zipfile' already exists, removing ..." -ForegroundColor Cyan
+            Remove-Item -Path "artifacts/nyancat-$id-$APPVEYOR_BUILD_NUMBER.zip"
+        }
+    
+        Write-Host "Creating $zipFile" -ForegroundColor Cyan
+    
+        [System.IO.Compression.ZipFile]::CreateFromDirectory(
+            ".build/bin/Nyancat/$Configuration/netcoreapp2.1/$id/publish",
+            "artifacts/nyancat-$id-$APPVEYOR_BUILD_NUMBER.zip" 
+        )
     }
-
-    Write-Host "Creating $zipFile" -ForegroundColor Cyan
-
-    [System.IO.Compression.ZipFile]::CreateFromDirectory(
-        ".build/bin/Nyancat/$Configuration/netcoreapp2.1/$id/publish",
-        "artifacts/nyancat-$id-$APPVEYOR_BUILD_NUMBER.zip" 
-    )
+    catch
+    {
+        Write-Host "Something went wrong!" -ForegroundColor Red
+        exit 1
+    }
 }
 
 Write-Host 'Done' -ForegroundColor Magenta

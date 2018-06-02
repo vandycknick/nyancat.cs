@@ -21,7 +21,7 @@ artifacts:
   - path: 'artifacts\*.nupkg'
     name: Packages
     type: NuGetPackages
-  - path: 'articats\*.zip'
+  - path: 'artifacts\*.zip'
     name: Binaries
 deploy:
   release: nyancat-v$(appveyor_build_version)

@@ -37,6 +37,8 @@ namespace Nyancat
             int min_col = -1;
             int max_col = -1;
 
+            Console.Title = "Nyanyanyanyanyanyanya...";
+
             using (var device = new GraphicsDevice())
             {
                 var playing = true;

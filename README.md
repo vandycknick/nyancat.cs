@@ -16,7 +16,7 @@ Nyancat running on dotnet core.
 ## Get Started
 
 Download the [2.1.300](https://www.microsoft.com/net/download/windows) .NET Core SDK or newer.
-Once installed, running the folling commadn will install the tool on you machine.
+Once installed, running the folling command:
 
 ```
 dotnet tool install --global nyancat

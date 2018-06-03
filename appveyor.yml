@@ -1,4 +1,4 @@
-version: 0.1.0.{build}
+version: 0.2.0.{build}
 os: Visual Studio 2017
 install:
   - ps: iwr https://get.dot.net/v1/dotnet-install.ps1 -outfile dotnet-install.ps1

@@ -1,15 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
+using McMaster.Extensions.CommandLineUtils;
 
 namespace Nyancat
 {
+    [Command(
+       Name = "nyancat",
+       FullName = "nyancat",
+       Description = "Terminal nyancat runner")]
+    [VersionOptionFromMember(MemberName = nameof(GetVersion))]
     class Program
     {
         const int FRAME_WIDTH = 64;
         const int FRAME_HEIGHT = 64;
 
-        static void Main(string[] args)
+        public void OnExecute()
         {
 
             var colors = new Dictionary<char, string>();
@@ -67,7 +74,7 @@ namespace Nyancat
                     {
                         var frameId = Animation.Frames.IndexOf(frame);
 
-                        device.Fill(' ',colors[',']);
+                        device.Fill(' ', colors[',']);
 
                         for (var row = min_row; row < max_row; row++)
                         {
@@ -75,8 +82,8 @@ namespace Nyancat
                             for (var col = min_col; col < max_col; col++)
                             {
                                 char color;
-                                
-                                
+
+
                                 if (row > 23 && row < 43 && col < 0)
                                 {
                                     /*
@@ -114,7 +121,7 @@ namespace Nyancat
 
                                 device.WriteChar(' ', colors[color]);
                                 device.WriteChar(' ', colors[color]);
-                                colFilled+=2;
+                                colFilled += 2;
                             }
 
                             device.NewLine();
@@ -124,9 +131,15 @@ namespace Nyancat
                         Thread.Sleep(5);
                     }
                 }
-
-                Console.Clear();
             }
+
+            Console.Clear();
+            Console.ResetColor();
         }
+
+        public static int Main(string[] args) => CommandLineApplication.Execute<Program>(args);
+
+        private static string GetVersion()
+            => typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
     }
 }

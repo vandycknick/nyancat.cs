@@ -6,16 +6,10 @@ using McMaster.Extensions.CommandLineUtils;
 
 namespace Nyancat
 {
-    [Command(
-       Name = "nyancat",
-       FullName = "nyancat",
-       Description = "Terminal nyancat runner")]
+    [Command(Name = "nyancat", FullName = "nyancat", Description = "Terminal nyancat runner")]
     [VersionOptionFromMember(MemberName = nameof(GetVersion))]
     class Program
     {
-        const int FRAME_WIDTH = 64;
-        const int FRAME_HEIGHT = 64;
-
         public void OnExecute()
         {
 
@@ -56,14 +50,14 @@ namespace Nyancat
 
                 if (min_col == max_col)
                 {
-                    min_col = (FRAME_WIDTH - width / 2) / 2;
-                    max_col = (FRAME_WIDTH + width / 2) / 2;
+                    min_col = (Animation.FRAME_WIDTH - width / 2) / 2;
+                    max_col = (Animation.FRAME_WIDTH + width / 2) / 2;
                 }
 
                 if (min_row == max_row)
                 {
-                    min_row = (FRAME_HEIGHT - height - 1) / 2;
-                    max_row = (FRAME_HEIGHT + height - 1) / 2;
+                    min_row = (Animation.FRAME_HEIGHT - height - 1) / 2;
+                    max_row = (Animation.FRAME_HEIGHT + height - 1) / 2;
                 }
 
                 Console.Clear();

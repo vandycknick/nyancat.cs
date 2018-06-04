@@ -28,9 +28,10 @@ deploy:
     prerelease: false
     on:
       appveyor_repo_tag: true
-# deploy:
-#   - provider: NuGet
-#     name: myget
-#     artifact: Packages
-#     api_key:
-#       secure: adddhere
+  - provider: NuGet
+    artifact: Packages
+    api_key:
+      secure: lBhS4ApDDffDkYXWY15sIlO25PZw3o93unf2LpQv/3vwl+nbJjg6/xJPdgqLJD+b
+    skip_symbols: false
+    on:
+      appveyor_repo_tag: true

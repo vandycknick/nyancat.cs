@@ -34,6 +34,9 @@ nyancat
 Usage: nyancat [options]
 
 Options:
-  --version                          Show version information
-  -?|-h|--help                       Show help information
+  --version             Show version information
+  -n|--no-counter       Do not display the timer
+  -s|--no-title         Do not set the titlebar text
+  -f|--frames <FRAMES>  Display the requested number of frames, then quit
+  -?|-h|--help          Show help information
 ```

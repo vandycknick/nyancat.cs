@@ -10,6 +10,16 @@ namespace Nyancat
     [VersionOptionFromMember(MemberName = nameof(GetVersion))]
     class Program
     {
+
+        [Option(Description="Do not display the timer", ShortName="n")]
+        public bool NoCounter { get; set; } = false;
+
+        [Option(Description="Do not set the titlebar text", ShortName="s")]
+        public bool NoTitle { get; set; } = false;
+
+        [Option(Description="Display the requested number of frames, then quit", ShortName="f")]
+        public int Frames { get; set; } = int.MaxValue;
+
         public void OnExecute()
         {
 
@@ -35,7 +45,11 @@ namespace Nyancat
             int min_col = -1;
             int max_col = -1;
 
-            Console.Title = "Nyanyanyanyanyanyanya...";
+            if (!NoTitle)
+            {
+                Console.Title = "Nyanyanyanyanyanyanya...";
+            }
+
 
             using (var device = new GraphicsDevice())
             {
@@ -123,6 +137,14 @@ namespace Nyancat
 
                         device.SwapBuffers();
                         Thread.Sleep(5);
+
+                        if (Frames != int.MaxValue && Frames > 0)
+                        {
+                            Frames--;
+                            if (Frames <= 0)
+                                return;
+                        }
+
                     }
                 }
             }

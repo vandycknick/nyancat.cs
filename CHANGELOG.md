@@ -1,6 +1,7 @@
 # Changelog
 
 ## [v0.3.0]
+Minor improvements and bug fixes
  - Added counter to the bottom of the screen
  - Added frame0 to frames array 🤦‍♂️
  - Trying out tiered compilation

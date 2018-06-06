@@ -827,6 +827,7 @@ namespace Nyancat
 
         public static readonly List<string[]> Frames = new List<string[]>
         {
+            Frame0,
             Frame1,
             Frame2,
             Frame3,

@@ -82,6 +82,7 @@ namespace Nyancat
             }
         }
 
+
         public void NewLine()
         {
             ccol = 0;
@@ -89,6 +90,12 @@ namespace Nyancat
 
             if (crow == rows)
                 crow=0;
+        }
+
+        public void MoveTo(int row, int col)
+        {
+            ccol = col;
+            crow = row;
         }
 
         public void SwapBuffers()

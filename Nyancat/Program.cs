@@ -82,6 +82,8 @@ namespace Nyancat
 
                 Console.Clear();
 
+                int sleep = Platform.IsWindows() ? 60 : 10;
+
                 var counter = new Stopwatch();
                 counter.Start();
 
@@ -109,9 +111,9 @@ namespace Nyancat
                                      */
                                     int mod_x = ((-col + 2) % 16) / 8;
 
-                                    if ((frameId / 2) % 2 == 0)
+                                    if (((frameId / 2) % 2) != 0)
                                     {
-                                        mod_x = 1 - mod_x;
+                                        mod_x++;
                                     }
 
                                     /*
@@ -166,7 +168,8 @@ namespace Nyancat
 
                         device.SwapBuffers();
 
-                        Thread.Sleep(9);
+                        // TODO: Dynamically calculate if we need run slower or faster
+                        Thread.Sleep(sleep);
 
                         if (Frames != int.MaxValue && Frames > 0)
                         {

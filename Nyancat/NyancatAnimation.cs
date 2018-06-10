@@ -2,9 +2,7 @@ using System.Collections.Generic;
 
 namespace Nyancat
 {
-
-    // const int test =1;
-    public class Animation
+    public class NyancatAnimation
     {
         public const int FRAME_WIDTH = 64;
         public const int FRAME_HEIGHT = 64;
@@ -841,4 +839,5 @@ namespace Nyancat
             Frame11,
         };
     }
+
 }

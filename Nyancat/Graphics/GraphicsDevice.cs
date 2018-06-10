@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using Nyancat.Native;
+using System.Text;
+using Nyancat.Drivers;
 
-namespace Nyancat
+namespace Nyancat.Graphics
 {
-
     struct CharPoint
     {
         public char Character { get; set; }
@@ -12,11 +10,16 @@ namespace Nyancat
         public string Color { get; set; }
     }
 
-    public class GraphicsDevice : IDisposable
+    public class GraphicsDevice : IGraphicsDevice
     {
-
         public int Width => cols;
         public int Height => rows;
+
+        public string Title { 
+            get => ConsoleDriver.Title;
+            set => ConsoleDriver.Title = value;
+        }
+        public bool IsRunning { get;  private set; } = true;
 
         private int rows, cols;
 
@@ -27,24 +30,34 @@ namespace Nyancat
 
         private CharPoint[,] backBuffer;
 
-        public GraphicsDevice()
+        private IConsoleDriver ConsoleDriver;
+
+        public GraphicsDevice(IConsoleDriver driver)
         {
-            if (Platform.IsWindows())
-                WindowsConsole.EnableVirtualTerminalProcessing();
+            ConsoleDriver = driver;
 
             Init();
         }
 
         private void Init()
         {
-            rows = Console.WindowHeight;
-            cols = Console.WindowWidth;
+            rows = ConsoleDriver.Height;
+            cols = ConsoleDriver.Width;
 
             frontBuffer = new CharPoint[rows, cols];
             backBuffer = new CharPoint[rows, cols];
 
             ccol = 0;
             crow = 0;
+        }
+
+        public void Exit()
+        {
+            IsRunning = false;
+        }
+
+        public void Clear()
+        {
         }
 
         public void Fill(char rune, string color)
@@ -62,14 +75,14 @@ namespace Nyancat
             }
         }
 
-        public void WriteChar(char rune, string color)
+        public void Write(char character, string color)
         {
             if (ccol >= cols || crow >= rows)
                 return;
 
             backBuffer[crow, ccol] = new CharPoint()
             {
-                Character = rune,
+                Character = character,
                 Color = color,
             };
 
@@ -89,7 +102,7 @@ namespace Nyancat
             crow++;
 
             if (crow == rows)
-                crow=0;
+                crow = 0;
         }
 
         public void MoveTo(int row, int col)
@@ -98,47 +111,36 @@ namespace Nyancat
             crow = row;
         }
 
+        private StringBuilder builder = new StringBuilder();
         public void SwapBuffers()
         {
+            builder.Clear();
             for (var row = 0; row < rows; row++)
             {
+                var previous = backBuffer[row, 0];
+
                 for (var col = 0; col < cols; col++)
                 {
-                    var front = frontBuffer[row, col];
                     var back = backBuffer[row, col];
 
-                    if (front.Character != back.Character || front.Color != back.Color)
+                    if (previous.Color != back.Color || col == 0)
                     {
-                        Console.CursorTop = row;
-                        Console.CursorLeft = col;
-                        string line = back.Color + back.Character;
-
-                        int nextCol = col + 1;
-
-                        if (nextCol >= cols) 
-                            continue;
-
-                        CharPoint current = back;
-                        CharPoint next = backBuffer[row, nextCol];
-
-                        while (current.Character == next.Character && current.Color == next.Color)
-                        {
-                            line += next.Character;
-                            col++;
-                            nextCol = col + 1;
-
-                            if (nextCol >= cols)
-                                break;
-
-                            current = next;
-                            next = backBuffer[row, nextCol];
-                        }
-
-                        Console.Write(line);
+                        builder.Append(back.Color);
                     }
 
+                    builder.Append(back.Character);
+
+                    previous = back;
+                }
+
+                if (row + 1 < rows)
+                {
+                    builder.Append(System.Environment.NewLine);
                 }
             }
+
+            ConsoleDriver.Clear();
+            ConsoleDriver.Write(builder.ToString());
 
             ccol = 0;
             crow = 0;
@@ -149,10 +151,6 @@ namespace Nyancat
 
         public void Dispose()
         {
-            if (Platform.IsWindows())
-            {
-                WindowsConsole.RestoreTerminal();
-            }
         }
     }
 }

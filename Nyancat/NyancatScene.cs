@@ -74,7 +74,6 @@ namespace Nyancat
             counter.Start();
         }
 
-
         private int frameId = 0;
         private string[] GetFrame()
         {

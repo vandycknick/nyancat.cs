@@ -189,8 +189,14 @@ namespace Nyancat.Drivers
         {
             if (record.EventType == EventType.WindowBufferSize && WindowResize != null)
             {
-                _widht = record.WindowBufferSizeEvent.size.X;
-                _height = record.WindowBufferSizeEvent.size.Y;
+                var info = new ConsoleScreenBufferInfo();
+
+                SetConsoleCursorPosition(ScreenBuffer, new Coord { X = 0, Y = 0 });
+
+                GetConsoleScreenBufferInfo(ScreenBuffer, out info);
+
+                _widht = info.srWindow.Right + 1;
+                _height = info.srWindow.Bottom + 1;
                 WindowResize();
             }
         }

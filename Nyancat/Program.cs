@@ -27,7 +27,7 @@ namespace Nyancat
         public void OnExecute()
         {
             var host = new ConsoleGraphicsHostBuilder()
-                .ConfigureServices((context, services) => 
+                .ConfigureServices((context, services) =>
                 {
                     services.Configure<NyancatSceneOptions>(options =>
                     {

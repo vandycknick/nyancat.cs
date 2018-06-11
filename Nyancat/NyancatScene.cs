@@ -57,6 +57,14 @@ namespace Nyancat
                 max_row = (NyancatAnimation.FRAME_HEIGHT + (Graphics.Height - 1)) / 2;
             }
 
+            Graphics.OnResize = () =>
+            {
+                min_col = (NyancatAnimation.FRAME_WIDTH - Graphics.Width / 2) / 2;
+                max_col = (NyancatAnimation.FRAME_WIDTH + Graphics.Width / 2) / 2;
+                min_row = (NyancatAnimation.FRAME_HEIGHT - (Graphics.Height - 1)) / 2;
+                max_row = (NyancatAnimation.FRAME_HEIGHT + (Graphics.Height - 1)) / 2;
+            };
+
             if (SceneOptions.ShowTitle)
             {
                 Graphics.Title = "Nyanyanyanyanyanyanya...";

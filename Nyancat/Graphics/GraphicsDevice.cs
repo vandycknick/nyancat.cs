@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Nyancat.Drivers;
 
@@ -15,11 +16,14 @@ namespace Nyancat.Graphics
         public int Width => cols;
         public int Height => rows;
 
-        public string Title { 
+        public string Title
+        {
             get => ConsoleDriver.Title;
             set => ConsoleDriver.Title = value;
         }
-        public bool IsRunning { get;  private set; } = true;
+        public bool IsRunning { get; private set; } = true;
+
+        public Action OnResize { private get; set; }
 
         private int rows, cols;
 
@@ -43,6 +47,18 @@ namespace Nyancat.Graphics
         {
             rows = ConsoleDriver.Height;
             cols = ConsoleDriver.Width;
+
+            ConsoleDriver.WindowResize = () =>
+            {
+                rows = ConsoleDriver.Height;
+                cols = ConsoleDriver.Width;
+
+                frontBuffer = new CharPoint[rows, cols];
+                backBuffer = new CharPoint[rows, cols];
+
+                if (OnResize != null)
+                    OnResize();
+            };
 
             frontBuffer = new CharPoint[rows, cols];
             backBuffer = new CharPoint[rows, cols];
@@ -147,6 +163,8 @@ namespace Nyancat.Graphics
 
             frontBuffer = backBuffer;
             backBuffer = new CharPoint[rows, cols];
+
+            ConsoleDriver.ProcessEvents();
         }
 
         public void Dispose()

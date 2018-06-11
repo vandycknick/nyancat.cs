@@ -15,6 +15,8 @@ namespace Nyancat.Drivers
 
         public int Width => Console.WindowWidth;
 
+        public Action WindowResize { private get; set; }
+
         private const string CLEAR_ANSI_CODE = "\x1b[H";
 
         public void Clear()
@@ -25,6 +27,11 @@ namespace Nyancat.Drivers
         public void Write(string buffer)
         {
             printf(buffer);
+        }
+
+        public void ProcessEvents()
+        {
+
         }
 
         public void Dispose()

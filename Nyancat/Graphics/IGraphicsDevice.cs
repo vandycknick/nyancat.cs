@@ -12,6 +12,8 @@ namespace Nyancat.Graphics
 
         bool IsRunning { get; }
 
+        Action OnResize { set; }
+
         void Clear();
 
         void Fill(char character, string color);

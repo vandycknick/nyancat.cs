@@ -10,7 +10,10 @@ namespace Nyancat.Drivers
 
         int Width { get; }
 
+        Action WindowResize { set; }
+
         void Clear();
         void Write(string buffer);
+        void ProcessEvents();
     }
 }

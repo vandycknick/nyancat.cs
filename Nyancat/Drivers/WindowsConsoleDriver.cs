@@ -14,8 +14,8 @@ namespace Nyancat.Drivers
 
         public int Height => _height;
         private int _height = Console.WindowHeight;
-        public int Width => _widht;
-        private int _widht = Console.WindowWidth;
+        public int Width => _width;
+        private int _width = Console.WindowWidth;
 
         public Action WindowResize { private get; set; }
 
@@ -191,12 +191,15 @@ namespace Nyancat.Drivers
             {
                 var info = new ConsoleScreenBufferInfo();
 
-                SetConsoleCursorPosition(ScreenBuffer, new Coord { X = 0, Y = 0 });
+                // SetConsoleCursorPosition(ScreenBuffer, new Coord { X = 0, Y = 0 });
 
                 GetConsoleScreenBufferInfo(ScreenBuffer, out info);
 
-                _widht = info.srWindow.Right + 1;
-                _height = info.srWindow.Bottom + 1;
+                _height = info.srWindow.Bottom - info.srWindow.Top + 1;
+                _width = info.srWindow.Right - info.srWindow.Left + 1;
+
+                // _widht = info.srWindow.Right + 1;
+                // _height = info.srWindow.Bottom + 1;
                 WindowResize();
             }
         }

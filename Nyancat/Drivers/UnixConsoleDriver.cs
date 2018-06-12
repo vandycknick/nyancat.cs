@@ -1,5 +1,6 @@
 using System;
-using System.Runtime.InteropServices;
+using Mono.Unix;
+using Mono.Unix.Native;
 
 namespace Nyancat.Drivers
 {
@@ -11,27 +12,45 @@ namespace Nyancat.Drivers
             set => Console.Title = value;
         }
 
-        public int Height => Console.WindowHeight;
 
-        public int Width => Console.WindowWidth;
+        public int Height => _height;
+
+        private int _height = Console.WindowHeight;
+
+        public int Width => _width;
+
+        private int _width = Console.WindowWidth;
 
         public Action WindowResize { private get; set; }
 
         private const string CLEAR_ANSI_CODE = "\x1b[H";
 
+        private UnixSignal SigWinch;
+
+        public UnixConsoleDriver()
+        {
+            SigWinch = new UnixSignal(Signum.SIGWINCH);
+        }
+
         public void Clear()
         {
-            printf(CLEAR_ANSI_CODE);
+            Stdlib.printf(CLEAR_ANSI_CODE);
         }
 
         public void Write(string buffer)
         {
-            printf(buffer);
+            Stdlib.printf(buffer);
         }
 
         public void ProcessEvents()
         {
-
+            if (SigWinch.IsSet)
+            {
+                _height = Console.WindowHeight;
+                _width = Console.WindowWidth;
+                WindowResize();
+                SigWinch.Reset();
+            }
         }
 
         public void Dispose()
@@ -40,9 +59,6 @@ namespace Nyancat.Drivers
             Console.Clear();
             Console.ResetColor();
         }
-
-        [DllImport("libc")]
-        extern static void printf(string format);
     }
 
 }

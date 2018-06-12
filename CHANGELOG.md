@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.4.0]
+New features and improvements
+ - Listen to console resize events on windows and unix systems
+ - Rewrite implemententation and start using HostBuilder
+ - Fix rainbow tail
+
 ## [v0.3.0]
 Minor improvements and bug fixes
  - Added counter to the bottom of the screen

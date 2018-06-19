@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.5.0]
+Minor improvements and bug fixes
+ - Fix NoTitle commandline flag not working
+ - Code cleanup and consistency
+
 ## [v0.4.0]
 New features and improvements
  - Listen to console resize events on windows and unix systems

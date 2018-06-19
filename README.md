@@ -22,6 +22,12 @@ Once installed, running the folling command:
 dotnet tool install --global nyancat
 ```
 
+Or use the following when upgrading from a previous version:
+
+```
+dotnet tool update --global nyancat
+```
+
 Type in the following command to get started
 
 ```

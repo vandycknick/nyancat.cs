@@ -30,9 +30,7 @@ namespace Nyancat.Graphics
         private int ccol = 0;
         private int crow = 0;
 
-        private CharPoint[,] frontBuffer;
-
-        private CharPoint[,] backBuffer;
+        private CharPoint[,] buffer;
 
         private IConsoleDriver ConsoleDriver;
 
@@ -53,15 +51,13 @@ namespace Nyancat.Graphics
                 rows = ConsoleDriver.Height;
                 cols = ConsoleDriver.Width;
 
-                frontBuffer = new CharPoint[rows, cols];
-                backBuffer = new CharPoint[rows, cols];
+                buffer = new CharPoint[rows, cols];
 
                 if (OnResize != null)
                     OnResize();
             };
 
-            frontBuffer = new CharPoint[rows, cols];
-            backBuffer = new CharPoint[rows, cols];
+            buffer = new CharPoint[rows, cols];
 
             ccol = 0;
             crow = 0;
@@ -82,7 +78,7 @@ namespace Nyancat.Graphics
             {
                 for (var col = 0; col < cols; col++)
                 {
-                    backBuffer[row, col] = new CharPoint()
+                    buffer[row, col] = new CharPoint()
                     {
                         Character = rune,
                         Color = color,
@@ -96,7 +92,7 @@ namespace Nyancat.Graphics
             if (ccol >= cols || crow >= rows)
                 return;
 
-            backBuffer[crow, ccol] = new CharPoint()
+            buffer[crow, ccol] = new CharPoint()
             {
                 Character = character,
                 Color = color,
@@ -133,11 +129,11 @@ namespace Nyancat.Graphics
             builder.Clear();
             for (var row = 0; row < rows; row++)
             {
-                var previous = backBuffer[row, 0];
+                var previous = buffer[row, 0];
 
                 for (var col = 0; col < cols; col++)
                 {
-                    var back = backBuffer[row, col];
+                    var back = buffer[row, col];
 
                     if (previous.Color != back.Color || col == 0)
                     {
@@ -161,8 +157,7 @@ namespace Nyancat.Graphics
             ccol = 0;
             crow = 0;
 
-            frontBuffer = backBuffer;
-            backBuffer = new CharPoint[rows, cols];
+            buffer = new CharPoint[rows, cols];
 
             ConsoleDriver.ProcessEvents();
         }

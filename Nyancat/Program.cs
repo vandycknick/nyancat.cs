@@ -27,7 +27,7 @@ namespace Nyancat
                 {
                     services.Configure<NyancatSceneOptions>(options =>
                     {
-                        options.ShowCounter = !NoTitle;
+                        options.ShowTitle = !NoTitle;
                         options.ShowCounter = !NoCounter;
                         options.Frames = Frames;
                     });

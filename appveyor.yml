@@ -1,5 +1,9 @@
-version: 0.4.0.{build}
+version: 0.5.0.{build}
 os: Visual Studio 2017
+environment:
+  global:
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+    DOTNET_CLI_TELEMETRY_OPTOUT: 1
 install:
   - ps: iwr https://get.dot.net/v1/dotnet-install.ps1 -outfile dotnet-install.ps1
   - ps: .\dotnet-install.ps1 -Version 2.1.300 -InstallDir $env:ProgramFiles/dotnet
@@ -7,10 +11,6 @@ build_script:
   - ps: .\scripts\build.ps1 -IsOfficialBuild
 after_build:
   - ps: .\scripts\package.ps1 -IsOfficialBuild
-environment:
-  global:
-    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-    DOTNET_CLI_TELEMETRY_OPTOUT: 1
 test: off
 artifacts:
   - path: 'artifacts\*.nupkg'

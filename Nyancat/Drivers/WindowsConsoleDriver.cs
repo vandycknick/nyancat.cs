@@ -191,15 +191,11 @@ namespace Nyancat.Drivers
             {
                 var info = new ConsoleScreenBufferInfo();
 
-                // SetConsoleCursorPosition(ScreenBuffer, new Coord { X = 0, Y = 0 });
-
                 GetConsoleScreenBufferInfo(ScreenBuffer, out info);
 
                 _height = info.srWindow.Bottom - info.srWindow.Top + 1;
                 _width = info.srWindow.Right - info.srWindow.Left + 1;
 
-                // _widht = info.srWindow.Right + 1;
-                // _height = info.srWindow.Bottom + 1;
                 WindowResize();
             }
         }

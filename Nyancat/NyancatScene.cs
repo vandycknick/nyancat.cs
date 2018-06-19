@@ -10,10 +10,10 @@ namespace Nyancat
     {
         private IGraphicsDevice Graphics;
 
-        private int min_row = -1;
-        private int max_row = -1;
-        private int min_col = -1;
-        private int max_col = -1;
+        private int minRow = -1;
+        private int maxRow = -1;
+        private int minCol = -1;
+        private int maxCol = -1;
 
         private Stopwatch counter = new Stopwatch();
 
@@ -44,24 +44,24 @@ namespace Nyancat
             colors['*'] = "\x1b[48;5;240m"; /* Gray cat face */
             colors['%'] = "\x1b[48;5;175m"; /* Pink cheeks */
 
-            if (min_col == max_col)
+            if (minCol == maxCol)
             {
-                min_col = (NyancatAnimation.FRAME_WIDTH - Graphics.Width / 2) / 2;
-                max_col = (NyancatAnimation.FRAME_WIDTH + Graphics.Width / 2) / 2;
+                minCol = (NyancatAnimation.FRAME_WIDTH - Graphics.Width / 2) / 2;
+                maxCol = (NyancatAnimation.FRAME_WIDTH + Graphics.Width / 2) / 2;
             }
 
-            if (min_row == max_row)
+            if (minRow == maxRow)
             {
-                min_row = (NyancatAnimation.FRAME_HEIGHT - (Graphics.Height - 1)) / 2;
-                max_row = (NyancatAnimation.FRAME_HEIGHT + (Graphics.Height - 1)) / 2;
+                minRow = (NyancatAnimation.FRAME_HEIGHT - (Graphics.Height - 1)) / 2;
+                maxRow = (NyancatAnimation.FRAME_HEIGHT + (Graphics.Height - 1)) / 2;
             }
 
             Graphics.OnResize = () =>
             {
-                min_col = (NyancatAnimation.FRAME_WIDTH - Graphics.Width / 2) / 2;
-                max_col = (NyancatAnimation.FRAME_WIDTH + Graphics.Width / 2) / 2;
-                min_row = (NyancatAnimation.FRAME_HEIGHT - (Graphics.Height - 1)) / 2;
-                max_row = (NyancatAnimation.FRAME_HEIGHT + (Graphics.Height - 1)) / 2;
+                minCol = (NyancatAnimation.FRAME_WIDTH - Graphics.Width / 2) / 2;
+                maxCol = (NyancatAnimation.FRAME_WIDTH + Graphics.Width / 2) / 2;
+                minRow = (NyancatAnimation.FRAME_HEIGHT - (Graphics.Height - 1)) / 2;
+                maxRow = (NyancatAnimation.FRAME_HEIGHT + (Graphics.Height - 1)) / 2;
             };
 
             if (SceneOptions.ShowTitle)
@@ -113,10 +113,10 @@ namespace Nyancat
 
             Graphics.Fill(' ', colors[',']);
 
-            for (var row = min_row; row < max_row; row++)
+            for (var row = minRow; row < maxRow; row++)
             {
                 int colFilled = 0;
-                for (var col = min_col; col < max_col; col++)
+                for (var col = minCol; col < maxCol; col++)
                 {
                     char color;
 

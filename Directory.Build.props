@@ -19,10 +19,16 @@
     <LangVersion>Latest</LangVersion>
 
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <GenerateFullPaths Condition="'$(VSCODE_PID)' != ''">true</GenerateFullPaths>
 
-    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory).build\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
-    <BaseOutputPath>$(MSBuildThisFileDirectory).build\bin\$(MSBuildProjectName)</BaseOutputPath>
+    <GenerateFullPaths Condition="'$(VSCODE_PID)' != ''">true</GenerateFullPaths>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory).build/obj/$(MSBuildProjectName)</BaseIntermediateOutputPath>
+    <BaseOutputPath>$(MSBuildThisFileDirectory).build/bin/$(MSBuildProjectName)</BaseOutputPath>
+
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OS)' == 'Unix'">
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory).build/obj/unix/$(MSBuildProjectName)</BaseIntermediateOutputPath>
+    <BaseOutputPath>$(MSBuildThisFileDirectory).build/bin/unix/$(MSBuildProjectName)</BaseOutputPath>
   </PropertyGroup>
 
 </Project>

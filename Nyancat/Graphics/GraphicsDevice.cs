@@ -4,7 +4,7 @@ using Nyancat.Drivers;
 
 namespace Nyancat.Graphics
 {
-    struct CharPoint
+    struct DrawableChar
     {
         public char Character { get; set; }
 
@@ -30,7 +30,7 @@ namespace Nyancat.Graphics
         private int ccol = 0;
         private int crow = 0;
 
-        private CharPoint[,] buffer;
+        private DrawableChar[,] buffer;
 
         private IConsoleDriver ConsoleDriver;
 
@@ -51,13 +51,13 @@ namespace Nyancat.Graphics
                 rows = ConsoleDriver.Height;
                 cols = ConsoleDriver.Width;
 
-                buffer = new CharPoint[rows, cols];
+                buffer = new DrawableChar[rows, cols];
 
                 if (OnResize != null)
                     OnResize();
             };
 
-            buffer = new CharPoint[rows, cols];
+            buffer = new DrawableChar[rows, cols];
 
             ccol = 0;
             crow = 0;
@@ -72,15 +72,15 @@ namespace Nyancat.Graphics
         {
         }
 
-        public void Fill(char rune, string color)
+        public void Fill(char character, string color)
         {
             for (var row = 0; row < rows; row++)
             {
                 for (var col = 0; col < cols; col++)
                 {
-                    buffer[row, col] = new CharPoint()
+                    buffer[row, col] = new DrawableChar()
                     {
-                        Character = rune,
+                        Character = character,
                         Color = color,
                     };
                 }
@@ -92,7 +92,7 @@ namespace Nyancat.Graphics
             if (ccol >= cols || crow >= rows)
                 return;
 
-            buffer[crow, ccol] = new CharPoint()
+            buffer[crow, ccol] = new DrawableChar()
             {
                 Character = character,
                 Color = color,
@@ -157,7 +157,7 @@ namespace Nyancat.Graphics
             ccol = 0;
             crow = 0;
 
-            buffer = new CharPoint[rows, cols];
+            buffer = new DrawableChar[rows, cols];
 
             ConsoleDriver.ProcessEvents();
         }

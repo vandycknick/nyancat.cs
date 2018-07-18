@@ -12,7 +12,6 @@ namespace Nyancat.Drivers
             set => Console.Title = value;
         }
 
-
         public int Height => _height;
 
         private int _height = Console.WindowHeight;

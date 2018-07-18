@@ -8,7 +8,8 @@ namespace Nyancat
 {
     public class NyancatScene : IScene
     {
-        private IGraphicsDevice Graphics;
+        private readonly IGraphicsDevice Graphics;
+        private readonly NyancatSceneOptions SceneOptions;
 
         private int minRow = -1;
         private int maxRow = -1;
@@ -18,8 +19,6 @@ namespace Nyancat
         private Stopwatch counter = new Stopwatch();
 
         private Dictionary<char, string> colors = new Dictionary<char, string>();
-
-        private NyancatSceneOptions SceneOptions { get; set; }
 
         public NyancatScene(IGraphicsDevice graphics, IOptions<NyancatSceneOptions> sceneOptionsAccessor)
         {

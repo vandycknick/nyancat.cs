@@ -217,11 +217,11 @@ namespace Nyancat.Drivers
 
         #region Win32ConsoleAPI
 
-        private static readonly int STD_INPUT_HANDLE = -10;
-        private static readonly int STD_OUTPUT_HANDLE = -11;
+        static readonly int STD_INPUT_HANDLE = -10;
+        static readonly int STD_OUTPUT_HANDLE = -11;
         // private static readonly int STD_ERROR_HANDLE = -12;
 
-        private static IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+        static IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern IntPtr GetStdHandle(int nStdHandle);
@@ -483,13 +483,13 @@ namespace Nyancat.Drivers
         public uint bSetFocus;
     }
 
-    public enum EventType
+    public enum EventType : ushort
     {
+        Key = 0x01,
+        Mouse = 0x02,
+        WindowBufferSize = 0x04,
+        Menu = 0x08,
         Focus = 0x10,
-        Key = 0x1,
-        Menu = 0x8,
-        Mouse = 2,
-        WindowBufferSize = 4
     }
 
 

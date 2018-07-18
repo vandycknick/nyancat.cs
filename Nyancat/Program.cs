@@ -10,6 +10,8 @@ namespace Nyancat
     [VersionOptionFromMember(MemberName = nameof(GetVersion))]
     class Program
     {
+        [Option(Description = "Show the introduction / about information at startup", ShortName = "i")]
+        public bool Intro { get; set; } = false;
 
         [Option(Description = "Do not display the timer", ShortName = "n")]
         public bool NoCounter { get; set; } = false;
@@ -23,6 +25,8 @@ namespace Nyancat
         public void OnExecute()
         {
             var host = new ConsoleGraphicsHostBuilder()
+                .AddScene<IntroScene>(isStartup: Intro)
+                .AddScene<NyancatScene>(isStartup: !Intro)
                 .ConfigureServices((context, services) =>
                 {
                     services.Configure<NyancatSceneOptions>(options =>
@@ -31,8 +35,6 @@ namespace Nyancat
                         options.ShowCounter = !NoCounter;
                         options.Frames = Frames;
                     });
-
-                    services.AddSingleton<IScene, NyancatScene>();
                 })
                 .Build();
 

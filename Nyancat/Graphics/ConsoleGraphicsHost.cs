@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -8,18 +10,16 @@ namespace Nyancat.Graphics
 {
     public class ConsoleGraphicsHost : IHostedService, IDisposable
     {
-        private IScene CurrentScene;
-
-        private IGraphicsDevice Graphics;
-
-        private IApplicationLifetime _appLifeTime;
+        private readonly IGraphicsDevice Graphics;
+        private readonly ISceneManager SceneManager;
+        private readonly IApplicationLifetime _appLifeTime;
 
         private Task RenderLoop;
 
-        public ConsoleGraphicsHost(IApplicationLifetime appLifetime, IGraphicsDevice graphics, IScene scene)
+        public ConsoleGraphicsHost(IApplicationLifetime appLifetime, IGraphicsDevice graphics, ISceneManager sceneManager)
         {
-            CurrentScene = scene;
             Graphics = graphics;
+            SceneManager = sceneManager;
             _appLifeTime = appLifetime;
         }
 
@@ -31,8 +31,8 @@ namespace Nyancat.Graphics
                 {
                     while (Graphics.IsRunning)
                     {
-                        Graphics.Clear();
-                        CurrentScene.Render();
+                        var scene = SceneManager.GetCurrentScene();
+                        scene.Render();
                         Graphics.SwapBuffers();
                     }
                 }
@@ -52,7 +52,6 @@ namespace Nyancat.Graphics
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Debug.WriteLine("Starting application");
-            CurrentScene.Init();
 
             _appLifeTime.ApplicationStarted.Register(OnStarted);
 
@@ -68,7 +67,7 @@ namespace Nyancat.Graphics
 
         public void Dispose()
         {
-            Debug.WriteLine("Doing some cleanup");
+            Debug.WriteLine("Dispose");
             Graphics.Dispose();
         }
     }

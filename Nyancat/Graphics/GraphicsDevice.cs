@@ -21,6 +21,7 @@ namespace Nyancat.Graphics
             get => ConsoleDriver.Title;
             set => ConsoleDriver.Title = value;
         }
+
         public bool IsRunning { get; private set; } = true;
 
         public Action OnResize { private get; set; }
@@ -68,10 +69,6 @@ namespace Nyancat.Graphics
             IsRunning = false;
         }
 
-        public void Clear()
-        {
-        }
-
         public void Fill(char character, string color)
         {
             for (var row = 0; row < rows; row++)
@@ -106,7 +103,6 @@ namespace Nyancat.Graphics
                     crow++;
             }
         }
-
 
         public void NewLine()
         {

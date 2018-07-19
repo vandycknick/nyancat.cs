@@ -1,4 +1,19 @@
 # Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [v1.0.0] - 2018-07-19
+### Added
+- Ability to switch between scenes
+- Added introduction scene
+
+### Changed
+- Updated README to show all command line arguments
+
+### Fixed
+- Rainbow tail not rendering correct
 
 ## [v0.5.0]
 Minor improvements and bug fixes

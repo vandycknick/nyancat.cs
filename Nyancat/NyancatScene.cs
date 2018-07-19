@@ -72,15 +72,14 @@ namespace Nyancat
             counter.Start();
         }
 
-        private int frameId = 0;
+        private int frameId = -1;
         private string[] GetFrame()
         {
-            var frame = NyancatAnimation.Frames[frameId];
-
             frameId++;
-
             if (frameId >= NyancatAnimation.Frames.Count)
                 frameId = 0;
+
+            var frame = NyancatAnimation.Frames[frameId];
 
             return frame;
         }
@@ -121,26 +120,21 @@ namespace Nyancat
 
                     if (row > 23 && row < 43 && col < 0)
                     {
-                        /*
-                         * Generate the rainbow tail.
-                         *
-                         * This is done with a prettrow simplistic square wave.
-                         */
-                        int mod_x = ((-col + 2) % 16) / 8;
+                        // Generate the rainbow tail.
+                        // This is done with a prettrow simplistic square wave.
+                        int modX = ((-col + 2) % 16) / 8;
 
                         if (((frameId / 2) % 2) != 0)
                         {
-                            mod_x++;
+                            modX = 1 - modX;
                         }
 
-                        /*
-                         * Our rainbow, with some padding.
-                         */
+                        // Our rainbow, with some padding.
                         string rainbow = ",,>>&&&+++###==;;;,,";
 
-                        var index = mod_x + row - 23;
+                        var index = modX + row - 23;
 
-                        if (index >= rainbow.Length)
+                        if (index >= rainbow.Length || index < 0)
                             index = 0;
 
                         color = rainbow[index];

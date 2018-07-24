@@ -2,9 +2,9 @@
 
 Nyancat running on dotnet core.
 
-[![AppVeyor build status][appveyor-badge]](https://ci.appveyor.com/project/vdyckn/nyancat-cs/branch/master)
+[![AppVeyor build status][appveyor-badge]](https://ci.appveyor.com/project/nickvandyck/nyancat-cs/branch/master)
 
-[appveyor-badge]: https://img.shields.io/appveyor/ci/vdyckn/nyancat-cs/master.svg?label=appveyor&style=flat-square
+[appveyor-badge]: https://img.shields.io/appveyor/ci/nickvandyck/nyancat-cs/master.svg?label=appveyor&style=flat-square
 
 [![NuGet][main-nuget-badge]][main-nuget]
 

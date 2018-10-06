@@ -1,4 +1,4 @@
-namespace Nyancat
+namespace Nyancat.Scenes
 {
     public class NyancatSceneOptions
     {

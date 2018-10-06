@@ -23,13 +23,13 @@ namespace Nyancat.Graphics
             if (RegisteredScenes == null)
                 RegisteredScenes = Provider.GetServices<IScene>();
 
-            if (MoveToScene != null) 
+            if (MoveToScene != null)
             {
                 CurrentScene = RegisteredScenes
                     .Where(s => s.GetType() == MoveToScene)
                     .FirstOrDefault();
 
-                CurrentScene.Init();
+                CurrentScene.Initialize();
                 MoveToScene = null;
             }
 

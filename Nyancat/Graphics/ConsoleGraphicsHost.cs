@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +23,9 @@ namespace Nyancat.Graphics
 
         private void OnStarted()
         {
+            var gameTime = new GameTime();
+            var watch = new Stopwatch();
+
             RenderLoop = Task.Run(() =>
             {
                 try
@@ -32,8 +33,10 @@ namespace Nyancat.Graphics
                     while (Graphics.IsRunning)
                     {
                         var scene = SceneManager.GetCurrentScene();
-                        scene.Render();
-                        Graphics.SwapBuffers();
+                        scene.Update();
+                        gameTime.Update(watch.Elapsed);
+                        watch.Restart();
+                        scene.Render(gameTime);
                     }
                 }
                 catch (Exception)
@@ -42,6 +45,7 @@ namespace Nyancat.Graphics
                 }
                 finally
                 {
+                    watch.Stop();
                     Graphics.Exit();
                     _appLifeTime.StopApplication();
                 }
@@ -68,7 +72,6 @@ namespace Nyancat.Graphics
         public void Dispose()
         {
             Debug.WriteLine("Dispose");
-            Graphics.Dispose();
         }
     }
 }

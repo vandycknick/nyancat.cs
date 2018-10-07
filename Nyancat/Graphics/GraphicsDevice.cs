@@ -97,25 +97,20 @@ namespace Nyancat.Graphics
         public void Draw(ITexture texture, Position position)
         {
             var buffer = texture.ToBuffer();
-            var textureRow = 0;
+            var textureRow = -1;
             for (var row = position.Row; row < Height && row < position.Row + texture.Height; row++)
             {
+                textureRow++;
                 if (row < 0)
-                {
-                    textureRow++;
                     continue;
-                }
 
+                var textureCol = -1;
                 for (var col = position.Col; col < Width && col < position.Col + texture.Width; col++)
                 {
-                    var textureCol = col - position.Col;
-                    if (col < 0 && textureCol > 0)
-                    {
-                        continue;
-                    }
-                    _backBuffer[row, col] = buffer[textureRow, textureCol];
+                    textureCol++; 
+                    if (col >= 0)
+                        _backBuffer[row, col] = buffer[textureRow, textureCol];
                 }
-                textureRow++;
             }
         }
 

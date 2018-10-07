@@ -102,14 +102,18 @@ namespace Nyancat.Scenes
                 Col = (Graphics.Width - _currentTexture.Width) / 2,
             };
 
-            var rainbowPosition = new Position
+            if (framePosition.Col > 0)
             {
-                Row = (Graphics.Height - 18) / 2,
-                Col = 0,
-            };
-            var rainbowTexture = new NyncatTailTexture(_frameId, framePosition.Col, _colorMap);
+                var rainbowPosition = new Position
+                {
+                    Row = (Graphics.Height - 18) / 2,
+                    Col = 0,
+                };
+                var rainbowTexture = new NyncatTailTexture(_frameId, framePosition.Col, _colorMap);
 
-            Graphics.Draw(rainbowTexture, rainbowPosition);
+                Graphics.Draw(rainbowTexture, rainbowPosition);
+            }
+
             Graphics.Draw(_currentTexture, framePosition);
 
             if (SceneOptions.ShowCounter)

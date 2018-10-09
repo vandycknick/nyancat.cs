@@ -23,34 +23,35 @@ namespace Nyancat.Graphics
 
         private void OnStarted()
         {
+            RenderLoop = Task.Factory.StartNew(GameLoop, TaskCreationOptions.LongRunning);
+        }
+
+        private void GameLoop()
+        {
             var gameTime = new GameTime();
             var watch = new Stopwatch();
 
-            RenderLoop = Task.Run(() =>
+            try
             {
-                try
+                while (Graphics.IsRunning)
                 {
-                    while (Graphics.IsRunning)
-                    {
-                        var scene = SceneManager.GetCurrentScene();
-                        scene.Update();
-                        gameTime.Update(watch.Elapsed);
-                        watch.Restart();
-                        scene.Render(gameTime);
-                    }
+                    var scene = SceneManager.GetCurrentScene();
+                    scene.Update();
+                    gameTime.Update(watch.Elapsed);
+                    watch.Restart();
+                    scene.Render(gameTime);
                 }
-                catch (Exception)
-                {
-                    throw;
-                }
-                finally
-                {
-                    watch.Stop();
-                    Graphics.Exit();
-                    _appLifeTime.StopApplication();
-                }
-
-            });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                watch.Stop();
+                Graphics.Exit();
+                _appLifeTime.StopApplication();
+            }
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Threading;
 using Microsoft.Extensions.Options;
 using Nyancat.Graphics;
 using Nyancat.Graphics.Colors;
+using Nyancat.Media;
 
 namespace Nyancat.Scenes
 {
@@ -21,6 +24,8 @@ namespace Nyancat.Scenes
         private List<ITexture> _textureBatch = new List<ITexture>();
 
         private ITexture _currentTexture;
+
+        private MediaPlayer _mediaPlayer;
 
         private Dictionary<char, Color> _colorMap = new Dictionary<char, Color>()
         {
@@ -48,7 +53,7 @@ namespace Nyancat.Scenes
 
         public void Initialize()
         {
-            foreach(var frame in NyancatAnimation.Frames)
+            foreach (var frame in NyancatAnimation.Frames)
             {
                 _textureBatch.Add(new AsciiTexture(frame, _colorMap, 2));
             }
@@ -56,6 +61,17 @@ namespace Nyancat.Scenes
             if (SceneOptions.ShowTitle)
             {
                 Graphics.Title = "Nyanyanyanyanyanyanya...";
+            }
+
+            if (SceneOptions.Sound)
+            {
+                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var wav = Path.Combine(path, "Resources", "nyancat.wav");
+                using (FileStream stream = new FileStream(wav, FileMode.Open))
+                {
+                    _mediaPlayer = new MediaPlayer(stream);
+                    _mediaPlayer.PlayLoop();
+                }
             }
 
             counter.Reset();
@@ -81,6 +97,7 @@ namespace Nyancat.Scenes
         {
             if (ShouldExit())
             {
+                _mediaPlayer?.Stop();
                 Graphics.Exit();
                 return;
             }

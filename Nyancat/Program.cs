@@ -17,11 +17,14 @@ namespace Nyancat
         [Option(Description = "Do not display the timer", ShortName = "n")]
         public bool NoCounter { get; set; } = false;
 
-        [Option(Description = "Do not set the titlebar text", ShortName = "s")]
+        [Option(Description = "Do not set the titlebar text", ShortName = "t")]
         public bool NoTitle { get; set; } = false;
 
         [Option(Description = "Display the requested number of frames, then quit", ShortName = "f")]
         public int Frames { get; set; } = int.MaxValue;
+
+        [Option(Description = "Play sound during animation (only works on windows)", ShortName = "s")]
+        public bool Sound { get; set; } = false;
 
         public void OnExecute()
         {
@@ -35,6 +38,7 @@ namespace Nyancat
                         options.ShowTitle = !NoTitle;
                         options.ShowCounter = !NoCounter;
                         options.Frames = Frames;
+                        options.Sound = Sound;
                     });
                 })
                 .Build();

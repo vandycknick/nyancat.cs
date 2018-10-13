@@ -16,7 +16,7 @@ Nyancat running on dotnet core.
 ## Get Started
 
 Download the [2.1.300](https://www.microsoft.com/net/download/windows) .NET Core SDK or newer.
-Once installed, running the folling command:
+Once installed, running the following  to install the application:
 
 ```sh
 dotnet tool install --global nyancat
@@ -28,11 +28,13 @@ Or use the following when upgrading from a previous version:
 dotnet tool update --global nyancat
 ```
 
-Type in the following command to get started
+After you everything installed just type `nyancat` to kick of the application
 
 ```sh
 nyancat
 ```
+
+Have fun! 🎉
 
 ## Usage
 

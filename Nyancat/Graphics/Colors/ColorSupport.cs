@@ -12,11 +12,12 @@ namespace Nyancat.Graphics.Colors
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var id = System.Environment.OSVersion.Version;
                 var strVersion = RuntimeInformation.OSDescription.Split("Microsoft Windows ")
                                     .Where(v => !String.IsNullOrWhiteSpace(v))
                                     .FirstOrDefault();
                 var osVersion = new Version(strVersion);
+
+                support |= ColorSupportLevel.Basic;
 
                 if (osVersion >= new Version("10.0.10586 "))
                 {
@@ -27,9 +28,6 @@ namespace Nyancat.Graphics.Colors
                 {
                     support |= ColorSupportLevel.TrueColor;
                 }
-
-                support |= ColorSupportLevel.Basic;
-
             }
             else
             {

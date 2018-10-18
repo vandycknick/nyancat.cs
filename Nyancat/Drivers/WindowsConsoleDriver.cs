@@ -171,16 +171,19 @@ namespace Nyancat.Drivers
                 if (err != 0)
                     throw new System.ComponentModel.Win32Exception(err);
             }
-
-            var records = new InputRecord[eventCount];
-
-            ReadConsoleInput(StdInputHandle, records, eventCount, out eventsRead);
-
-            if (eventsRead != 0)
+            
+            if(eventCount > 0)
             {
-                foreach (var record in records)
+                var records = new InputRecord[eventCount];
+
+                ReadConsoleInput(StdInputHandle, records, eventCount, out eventsRead);
+
+                if (eventsRead != 0)
                 {
-                    ProcessEventRecord(record);
+                    foreach (var record in records)
+                    {
+                        ProcessEventRecord(record);
+                    }
                 }
             }
         }

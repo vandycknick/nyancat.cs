@@ -2,16 +2,10 @@
 
 Nyancat running on dotnet core.
 
-[![AppVeyor build status][appveyor-badge]](https://ci.appveyor.com/project/nickvandyck/nyancat-cs/branch/master)
+[![Build status][appveyor-ci-badge]][appveyor-ci-url]
+[![NuGet][nuget-package-badge]][nuget-package-url]
 
-[appveyor-badge]: https://img.shields.io/appveyor/ci/nickvandyck/nyancat-cs/master.svg?label=appveyor&style=flat-square
-
-[![NuGet][main-nuget-badge]][main-nuget]
-
-[main-nuget]: https://www.nuget.org/packages/nyancat/
-[main-nuget-badge]: https://img.shields.io/nuget/v/nyancat.svg?style=flat-square&label=nuget
-
-![nyancat terminal](docs/nyancat-console.png)
+![Nyancat terminal](docs/nyancat-console.png)
 
 ## Get Started
 
@@ -28,13 +22,7 @@ Or use the following when upgrading from a previous version:
 dotnet tool update --global nyancat
 ```
 
-After you everything installed just type `nyancat` to kick of the application
-
-```sh
-nyancat
-```
-
-Have fun! 🎉
+When everything is installed just type `nyancat` in your favorite terminal. Have fun! 🎉
 
 ## Usage
 
@@ -49,3 +37,9 @@ Options:
   -f|--frames <FRAMES>  Display the requested number of frames, then quit
   -?|-h|--help          Show help information
 ```
+
+[appveyor-ci-url]: https://ci.appveyor.com/project/nickvandyck/nyancat-cs/branch/master
+[appveyor-ci-badge]: https://img.shields.io/appveyor/ci/nickvandyck/nyancat-cs/master.svg?label=appveyor&style=flat-square
+
+[nuget-package-url]: https://www.nuget.org/packages/nyancat/
+[nuget-package-badge]: https://img.shields.io/nuget/v/nyancat.svg?style=flat-square&label=nuget

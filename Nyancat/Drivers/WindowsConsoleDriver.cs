@@ -27,15 +27,14 @@ namespace Nyancat.Drivers
         private IntPtr StdInputHandle;
         private IntPtr ScreenBuffer;
 
-        private uint OirginalConsoleInputMode;
+        private uint OriginalConsoleInputMode;
         private uint OriginalConsoleOutputMode;
 
         private uint ConsoleOutputMode
         {
             get
             {
-                uint v;
-                GetConsoleMode(OutputHandle, out v);
+                GetConsoleMode(OutputHandle, out uint v);
                 return v;
             }
 
@@ -80,11 +79,12 @@ namespace Nyancat.Drivers
 
         private void Init()
         {
-            OirginalConsoleInputMode = ConsoleInputMode;
+            OriginalConsoleInputMode = ConsoleInputMode;
             OriginalConsoleOutputMode = ConsoleOutputMode;
 
+            ConsoleOutputMode &= ~(uint)ConsoleOutputModeFlags.EnableWrapAtEolOutput;
             ConsoleOutputMode |= (uint)ConsoleOutputModeFlags.EnableVirtualTerminalProcessing;
-            ConsoleOutputMode |= (uint)ConsoleOutputModeFlags.EnableNewLineAutoReturn;
+            ConsoleOutputMode |= (uint)ConsoleOutputModeFlags.DisableNewLineAutoReturn;
 
             ConsoleInputMode |= (uint)ConsoleInputModeFlags.EnableWindowInput;
 
@@ -155,9 +155,14 @@ namespace Nyancat.Drivers
 
         public void Write(string buffer)
         {
-            uint charsWritten;
             SetConsoleCursorPosition(ScreenBuffer, new Coord() { X = 0, Y = 0 });
-            WriteConsole(ScreenBuffer, buffer, (uint)buffer.Length, out charsWritten, null);
+            WriteConsole(ScreenBuffer, buffer.ToCharArray(), (uint)buffer.Length, out var _, null);
+        }
+
+        public void Write(ReadOnlySpan<char> text)
+        {
+            SetConsoleCursorPosition(ScreenBuffer, new Coord() { X = 0, Y = 0 });
+            WriteConsole(ScreenBuffer, text.ToArray(), (uint)text.Length, out var _, null);
         }
 
         public void ProcessEvents()
@@ -208,7 +213,7 @@ namespace Nyancat.Drivers
             Debug.WriteLine("Disposing windows console driver");
 
             ConsoleOutputMode = OriginalConsoleOutputMode;
-            ConsoleInputMode = OirginalConsoleInputMode;
+            ConsoleInputMode = OriginalConsoleInputMode;
 
             if (!SetConsoleActiveScreenBuffer(OutputHandle))
             {
@@ -253,7 +258,7 @@ namespace Nyancat.Drivers
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         static extern bool WriteConsole(
             IntPtr hConsoleOutput,
-            String lpbufer,
+            char[] lpbufer,
             UInt32 NumberOfCharsToWriten,
             out UInt32 lpNumberOfCharsWritten,
             object lpReserved
@@ -314,8 +319,9 @@ namespace Nyancat.Drivers
     [Flags]
     enum ConsoleOutputModeFlags : uint
     {
-        EnableVirtualTerminalProcessing = 4,
-        EnableNewLineAutoReturn = 8,
+        EnableWrapAtEolOutput = 0x0002,
+        EnableVirtualTerminalProcessing = 0x0004,
+        DisableNewLineAutoReturn = 0x0008,
     }
 
     [Flags]

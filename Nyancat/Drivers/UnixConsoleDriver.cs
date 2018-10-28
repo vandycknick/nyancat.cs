@@ -41,6 +41,11 @@ namespace Nyancat.Drivers
             Stdlib.printf(buffer);
         }
 
+        public void Write(ReadOnlySpan<char> text)
+        {
+            Stdlib.printf(text.ToString());
+        }
+
         public void ProcessEvents()
         {
             if (SigWinch.IsSet)

@@ -1,32 +1,45 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Nyancat.Graphics.Colors
 {
     public class ColorSupport
     {
+
+        private static Regex _versionRegex = new Regex(@"(\d+\.\d+\.\d+)");
         public static ColorSupportLevel Detect()
         {
             var support = ColorSupportLevel.None;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var strVersion = RuntimeInformation.OSDescription.Split("Microsoft Windows ")
-                                    .Where(v => !String.IsNullOrWhiteSpace(v))
-                                    .FirstOrDefault();
-                var osVersion = new Version(strVersion);
+                var match = _versionRegex.Match(RuntimeInformation.OSDescription);
 
-                support |= ColorSupportLevel.Basic;
-
-                if (osVersion >= new Version("10.0.10586 "))
+                if (match.Success)
                 {
-                    support |= ColorSupportLevel.Ansi256;
-                }
+                    try
+                    {
+                        var version = match.Value;
+                        var osVersion = new Version(version);
 
-                if (osVersion >= new Version("10.0.14931"))
-                {
-                    support |= ColorSupportLevel.TrueColor;
+                        if (osVersion.Major > 10)
+                        {
+                            support |= ColorSupportLevel.Basic;
+                        }
+
+                        if (osVersion >= new Version("10.0.10586 "))
+                        {
+                            support |= ColorSupportLevel.Ansi256;
+                        }
+
+                        if (osVersion >= new Version("10.0.14931"))
+                        {
+                            support |= ColorSupportLevel.TrueColor;
+                        }
+                    }
+                    catch {}
                 }
             }
             else

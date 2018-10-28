@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Text;
 using Nyancat.Drivers;
@@ -68,12 +69,7 @@ namespace Nyancat.Graphics
             };
         }
 
-        public void Draw(string message, Position position, Color color)
-        {
-            Draw(message, position, color, color);
-        }
-
-        public void Draw(string message, Position position, Color foreGround, Color background)
+        public void Draw(ReadOnlySpan<char> message, Position position, Color foreGround, Color background)
         {
             if (position.Row >= Height)
                 return;
@@ -134,7 +130,7 @@ namespace Nyancat.Graphics
 
                     if (previous.ForeGround != current.ForeGround || col == 0)
                     {
-                        _frontBuffer.Append(_colorBuilder.Write($"{current.Character}", current.ForeGround, current.Background));
+                        _frontBuffer.Append(_colorBuilder.Write(current.Character.ToString(), current.ForeGround, current.Background));
                     }
                     else
                     {

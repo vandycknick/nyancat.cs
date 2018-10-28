@@ -17,9 +17,7 @@ namespace Nyancat.Graphics
 
         void Clear(char character, Color color);
 
-        void Draw(string message, Position position, Color color);
-
-        void Draw(string message, Position position, Color color, Color background);
+        void Draw(ReadOnlySpan<char> message, Position position, Color color, Color background);
 
         void Draw(ITexture texture, Position position);
 

@@ -14,6 +14,9 @@ namespace Nyancat.Drivers
 
         void Clear();
         void Write(string buffer);
+
+        void Write(ReadOnlySpan<char> text);
+
         void ProcessEvents();
     }
 }

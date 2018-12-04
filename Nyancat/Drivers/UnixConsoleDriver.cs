@@ -1,11 +1,16 @@
 using System;
-using Mono.Unix;
-using Mono.Unix.Native;
+using System.Runtime.InteropServices;
 
 namespace Nyancat.Drivers
 {
     public class UnixConsoleDriver : IConsoleDriver
     {
+        private const string HIDE_CURSOR = "\x1b[?25l";
+        private const string RESET_CURSOR = "\x1b[H";
+        private const string SHOW_CURSOR = "\x1b[?25h";
+        private const string CLEAR_SCREEN = "\x1b[2J";
+        private const string RESET_ALL_ATTRIBUTES = "\x1b[0m";
+
         public string Title
         {
             get => Console.Title;
@@ -22,47 +27,45 @@ namespace Nyancat.Drivers
 
         public Action WindowResize { private get; set; }
 
-        private const string CLEAR_ANSI_CODE = "\x1b[H";
-
-        private UnixSignal SigWinch;
-
         public UnixConsoleDriver()
         {
-            SigWinch = new UnixSignal(Signum.SIGWINCH);
+            printf(HIDE_CURSOR);
         }
 
-        public void Clear()
+        public void ResetCursor()
         {
-            Stdlib.printf(CLEAR_ANSI_CODE);
-        }
-
-        public void Write(string buffer)
-        {
-            Stdlib.printf(buffer);
+            printf(RESET_CURSOR);
         }
 
         public void Write(ReadOnlySpan<char> text)
         {
-            Stdlib.printf(text.ToString());
+            printf(text.ToString());
         }
 
         public void ProcessEvents()
         {
-            if (SigWinch.IsSet)
+            var h = Console.WindowHeight;
+            var w = Console.WindowWidth;
+
+            if (_height != h || _width != w)
             {
-                _height = Console.WindowHeight;
-                _width = Console.WindowWidth;
+                _height = h;
+                _width = w;
                 WindowResize();
-                SigWinch.Reset();
             }
         }
 
         public void Dispose()
         {
-            Clear();
-            Console.Clear();
-            Console.ResetColor();
+            printf($"{SHOW_CURSOR}{RESET_ALL_ATTRIBUTES}{RESET_CURSOR}{CLEAR_SCREEN}");
+        }
+
+        [DllImport("c", CallingConvention = CallingConvention.Cdecl, EntryPoint = "printf")]
+        private static extern int sys_printf(string format, string message);
+
+        private static int printf(string message)
+        {
+            return sys_printf("%s", message);
         }
     }
-
 }

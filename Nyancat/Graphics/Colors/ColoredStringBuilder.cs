@@ -20,11 +20,6 @@ namespace Nyancat.Graphics.Colors
             _colorSupport = colorSupport;
         }
 
-        public string Write(ReadOnlySpan<char> text, Color color)
-        {
-            return Write(text, color, color);
-        }
-
         public string Write(ReadOnlySpan<char> text, Color color, Color background)
         {
 

@@ -12,8 +12,7 @@ namespace Nyancat.Drivers
 
         Action WindowResize { set; }
 
-        void Clear();
-        void Write(string buffer);
+        void ResetCursor();
 
         void Write(ReadOnlySpan<char> text);
 

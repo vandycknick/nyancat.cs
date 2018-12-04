@@ -22,8 +22,8 @@ namespace Nyancat.Graphics
 
         public string Title
         {
-            get => ConsoleDriver.Title;
-            set => ConsoleDriver.Title = value;
+            get => _consoleDriver.Title;
+            set => _consoleDriver.Title = value;
         }
 
         public bool IsRunning { get; private set; } = true;
@@ -36,20 +36,20 @@ namespace Nyancat.Graphics
 
         private ConsoleChar _backGround;
 
-        private IConsoleDriver ConsoleDriver;
+        private readonly IConsoleDriver _consoleDriver;
 
         public GraphicsDevice(IConsoleDriver driver)
         {
-            ConsoleDriver = driver;
+            _consoleDriver = driver;
 
             ResetWindowSize();
-            ConsoleDriver.WindowResize = ResetWindowSize;
+            _consoleDriver.WindowResize = ResetWindowSize;
         }
 
         private void ResetWindowSize()
         {
-            _rows = ConsoleDriver.Height;
-            _cols = ConsoleDriver.Width;
+            _rows = _consoleDriver.Height;
+            _cols = _consoleDriver.Width;
 
             _backBuffer = new ConsoleChar[_rows, _cols];
         }
@@ -146,13 +146,12 @@ namespace Nyancat.Graphics
                 }
             }
 
-            ConsoleDriver.Clear();
-            ConsoleDriver.Write(_frontBuffer.ToString());
-            ConsoleDriver.Write(_colorBuilder.Reset());
+            _consoleDriver.ResetCursor();
+            _consoleDriver.Write(_frontBuffer.ToString());
+            _consoleDriver.Write(_colorBuilder.Reset());
+            _consoleDriver.ProcessEvents();
 
             _backBuffer = new ConsoleChar[_rows, _cols];
-
-            ConsoleDriver.ProcessEvents();
         }
 
         public void Exit()

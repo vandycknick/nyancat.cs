@@ -149,19 +149,13 @@ namespace Nyancat.Drivers
             }
         }
 
-        public void Clear()
-        {
-        }
-
-        public void Write(string buffer)
+        public void ResetCursor()
         {
             SetConsoleCursorPosition(ScreenBuffer, new Coord() { X = 0, Y = 0 });
-            WriteConsole(ScreenBuffer, buffer.ToCharArray(), (uint)buffer.Length, out var _, null);
         }
 
         public void Write(ReadOnlySpan<char> text)
         {
-            SetConsoleCursorPosition(ScreenBuffer, new Coord() { X = 0, Y = 0 });
             WriteConsole(ScreenBuffer, text.ToArray(), (uint)text.Length, out var _, null);
         }
 

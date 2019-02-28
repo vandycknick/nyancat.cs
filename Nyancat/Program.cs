@@ -23,7 +23,7 @@ namespace Nyancat
         [Option(Description = "Display the requested number of frames, then quit", ShortName = "f")]
         public int Frames { get; set; } = int.MaxValue;
 
-        [Option(Description = "Play sound during animation (only works on windows)", ShortName = "s")]
+        // [Option(Description = "Play sound during animation (only works on windows)", ShortName = "s")]
         public bool Sound { get; set; } = false;
 
         public void OnExecute()

@@ -37,12 +37,13 @@ namespace Nyancat.Scenes
         {
             var moveOn = 5 - gameTime.TotalGameTime.Seconds;
 
-            if (moveOn < 0) {
+            if (moveOn < 0)
+            {
                 SceneManager.GoTo<NyancatScene>();
                 return;
             }
 
-            Graphics.Clear(Color.Transparent);
+            Graphics.Clear(Color.Black);
 
             var row = 3;
 
@@ -55,7 +56,7 @@ namespace Nyancat.Scenes
                     Col =col
                 };
 
-                Graphics.Draw(line, postion, Color.White, Color.Transparent);
+                Graphics.Draw(line, postion, Color.White, Color.Black);
                 row += 2;
             }
 
@@ -68,7 +69,7 @@ namespace Nyancat.Scenes
                 Col = (Graphics.Width - starting.Length) / 2,
             };
 
-            Graphics.Draw(starting, position, Color.White, Color.Transparent);
+            Graphics.Draw(starting, position, Color.White, Color.Black);
             Graphics.Render();
         }
     }

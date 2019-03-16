@@ -24,7 +24,7 @@ namespace Nyancat
                 { "i|intro", "Show the introduction / about information at startup", i => showIntro = true },
                 { "n|no-counter", "Do not display the timer", n => noCounter = true },
                 { "t|no-title", "Do not set the titlebar text", t => noTitle = true },
-                { "f|frames", "Display the requested number of frames, then quit", (int f) => frames = f },
+                { "f|frames=", "Display the requested number of frames, then quit", (int f) => frames = f },
                 { "?|h|help", "Show help information", h => showHelp = h != null },
             };
 
@@ -69,6 +69,7 @@ namespace Nyancat
             {
                 Console.WriteLine($"{GetName()}: {GetVersion()}");
                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 Console.WriteLine("Try `nyancat --help' for more information.");
                 return 1;
             }

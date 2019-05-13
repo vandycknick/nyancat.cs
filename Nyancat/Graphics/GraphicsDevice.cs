@@ -15,7 +15,7 @@ namespace Nyancat.Graphics
         public Color Background { get; set; }
     }
 
-    public class GraphicsDevice : IGraphicsDevice
+    public sealed class GraphicsDevice : IGraphicsDevice
     {
         public int Width => _cols;
         public int Height => _rows;
@@ -32,7 +32,7 @@ namespace Nyancat.Graphics
 
         private ConsoleChar[,] _backBuffer;
 
-        private StringBuilder _frontBuffer = new StringBuilder();
+        private readonly ColoredStringBuilder _frontBuffer = new ColoredStringBuilder();
 
         private ConsoleChar _backGround;
 
@@ -115,8 +115,6 @@ namespace Nyancat.Graphics
             SwapBuffers();
         }
 
-        // TODO: colored string builder is quite nasty, please improve 😅
-        private ColoredStringBuilder _colorBuilder = new ColoredStringBuilder();
         public void SwapBuffers()
         {
             _frontBuffer.Clear();
@@ -130,7 +128,10 @@ namespace Nyancat.Graphics
 
                     if (previous.ForeGround != current.ForeGround || col == 0)
                     {
-                        _frontBuffer.Append(_colorBuilder.Write(current.Character.ToString(), current.ForeGround, current.Background));
+                        _frontBuffer.Append(
+                            current.Character,
+                            current.ForeGround, current.Background
+                        );
                     }
                     else
                     {
@@ -147,8 +148,7 @@ namespace Nyancat.Graphics
             }
 
             _consoleDriver.ResetCursor();
-            _consoleDriver.Write(_frontBuffer.ToString());
-            _consoleDriver.Write(_colorBuilder.Reset());
+            _consoleDriver.Write(_frontBuffer.ResetColor().ToString());
             _consoleDriver.ProcessEvents();
 
             _backBuffer = new ConsoleChar[_rows, _cols];

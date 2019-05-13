@@ -2,10 +2,10 @@ namespace Nyancat.Graphics
 {
     public interface IScene
     {
-         void Initialize();
+        void Initialize();
 
-         void Update();
+        void Update();
 
-         void Render(IGameTime gameTime);
+        void Render(IGameTime gameTime);
     }
 }

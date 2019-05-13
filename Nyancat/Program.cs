@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Mono.Options;
@@ -10,7 +11,7 @@ namespace Nyancat
 {
     class Program
     {
-        public static int Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
             bool showIntro = false;
             bool showHelp = false;
@@ -46,7 +47,8 @@ namespace Nyancat
                     return 0;
                 }
 
-                var host = new ConsoleGraphicsHostBuilder()
+                var host = new HostBuilder()
+                    .UseConsoleGraphicsHost()
                     .AddScene<IntroScene>(isStartup: showIntro)
                     .AddScene<NyancatScene>(isStartup: !showIntro)
                     .ConfigureServices((context, services) =>
@@ -58,11 +60,9 @@ namespace Nyancat
                             sceneOptions.Frames = frames;
                             sceneOptions.Sound = sound;
                         });
-                    })
-                    .Build();
+                    });
 
-                host.Run();
-
+                await host.RunConsoleAsync();
                 return 0;
             }
             catch (OptionException e)

@@ -1,3 +1,4 @@
+.PHONY: purge clean default install uninstall setup
 .DEFAULT_GOAL := default
 
 ARTIFACTS 		:= $(shell pwd)/artifacts

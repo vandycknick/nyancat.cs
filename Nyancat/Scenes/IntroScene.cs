@@ -11,7 +11,7 @@ namespace Nyancat.Scenes
         private readonly IGraphicsDevice Graphics;
         private readonly ISceneManager SceneManager;
 
-        private List<string> _messages { get; set; }
+        private List<string> _messages;
 
         public IntroScene(IGraphicsDevice graphics, ISceneManager sceneManager)
         {
@@ -21,16 +21,16 @@ namespace Nyancat.Scenes
 
         public void Initialize()
         {
-            _messages = new List<string>();
-
-            _messages.Add("Nynacat Dotnet Core");
-            _messages.Add("written by Nick Van Dyck @vandycknick");
-            _messages.Add("Problems? Please report here: https://github.com/nickvdyck/nyancat.cs/issues");
+            _messages = new List<string>
+            {
+                "Nyancat Dotnet Core",
+                "written by Nick Van Dyck @vandycknick",
+                "Problems? Please report here: https://github.com/nickvdyck/nyancat.cs/issues"
+            };
         }
 
         public void Update()
         {
-
         }
 
         public void Render(IGameTime gameTime)
@@ -60,8 +60,6 @@ namespace Nyancat.Scenes
                 row += 2;
             }
 
-            Color test = Color.Empty;
-            
             var starting = $"Starting in {(5 - gameTime.TotalGameTime.Seconds)}...";
             var position = new Position
             {

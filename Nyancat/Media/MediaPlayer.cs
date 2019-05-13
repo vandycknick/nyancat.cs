@@ -78,7 +78,7 @@ namespace Nyancat.Media
             SND_RESOURCE = 0x00040004
         }
 
-        private class Winmm
+        private static class Winmm
         {
             [DllImport("winmm.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
             internal static extern bool PlaySound(byte[] soundName, IntPtr hmod, SoundFlags soundFlags);

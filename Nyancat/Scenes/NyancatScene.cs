@@ -16,12 +16,12 @@ namespace Nyancat.Scenes
         private readonly IGraphicsDevice Graphics;
         private readonly NyancatSceneOptions SceneOptions;
 
-        private Stopwatch counter = new Stopwatch();
+        private readonly Stopwatch counter = new Stopwatch();
 
-        private Dictionary<char, string> colors = new Dictionary<char, string>();
+        private readonly Dictionary<char, string> colors = new Dictionary<char, string>();
         private int _frameId = -1;
 
-        private List<ITexture> _textureBatch = new List<ITexture>();
+        private readonly List<ITexture> _textureBatch = new List<ITexture>();
 
         private ITexture _currentTexture;
 

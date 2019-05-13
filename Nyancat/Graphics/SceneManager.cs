@@ -2,20 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Nyancat.Graphics
 {
-    public class SceneManager : ISceneManager
+    public sealed class SceneManager : ISceneManager
     {
         private readonly IServiceProvider Provider;
+        private readonly SceneManagerOptions _options;
         
         private IScene CurrentScene;
         private IEnumerable<IScene> RegisteredScenes;
         private Type MoveToScene;
 
-        public SceneManager(IServiceProvider provider)
+        public SceneManager(IServiceProvider provider, IOptions<SceneManagerOptions> options)
         {
             Provider = provider;
+            _options = options.Value;
+
+            GoToStartup();
         }
 
         public IScene GetCurrentScene()
@@ -34,6 +39,11 @@ namespace Nyancat.Graphics
             }
 
             return CurrentScene;
+        }
+
+        internal void GoToStartup()
+        {
+            GoTo(_options.StartupScene);
         }
 
         public void GoTo<T>()

@@ -1,17 +1,19 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Text;
 
 namespace Nyancat.Graphics.Colors
 {
-    public class ColoredStringBuilder
+    public sealed class ColoredStringBuilder
     {
-        private static ColorSupportLevel _ansiColorSupport = ColorSupport.Detect();
-        private readonly ColorSupportLevel _colorSupport;
-
         private const char Escape = '\x1b';
+        private const string Reset = "\x1b[0m";
+        public static ColorSupportLevel AnsiColorSupport = ColorSupport.Detect();
+        private readonly ColorSupportLevel _colorSupport;
+        private readonly StringBuilder _stringBuilder = new StringBuilder();
 
-        public ColoredStringBuilder() : this(_ansiColorSupport)
+        public ColoredStringBuilder() : this(AnsiColorSupport)
         {
         }
 
@@ -20,26 +22,75 @@ namespace Nyancat.Graphics.Colors
             _colorSupport = colorSupport;
         }
 
-        public string Write(ReadOnlySpan<char> text, Color color, Color background)
+        public ColoredStringBuilder Append(ReadOnlySpan<char> text, Color color, Color background)
+        {
+            WriteColor(text, color, background);
+            return this;
+        }
+
+        public ColoredStringBuilder Append(char value, Color color, Color background)
+        {
+            WriteColor(value.ToString(), color, background);
+            return this;
+        }
+
+        public ColoredStringBuilder Append(ReadOnlySpan<char> text)
+        {
+            _stringBuilder.Append(text);
+            return this;
+        }
+
+        public ColoredStringBuilder Append(char value)
+        {
+            _stringBuilder.Append(value);
+            return this;
+        }
+
+        public ColoredStringBuilder Clear()
+        {
+            _stringBuilder.Clear();
+            return this;
+        }
+
+        public new string ToString() => _stringBuilder.ToString();
+
+        public ColoredStringBuilder ResetColor()
+        {
+            if (
+                _colorSupport.HasFlag(ColorSupportLevel.TrueColor) ||
+                _colorSupport.HasFlag(ColorSupportLevel.Ansi256) ||
+                _colorSupport.HasFlag(ColorSupportLevel.Basic)
+            )
+            {
+                Append(Reset);
+            }
+
+            return this;
+        }
+
+        private void WriteColor(ReadOnlySpan<char> text, Color color, Color background)
         {
 
             if (_colorSupport.HasFlag(ColorSupportLevel.TrueColor))
             {
-                return WriteTrueColor(color, true) + WriteTrueColor(background, false) + text.ToString();
+                WriteTrueColor(color, true);
+                WriteTrueColor(background, false);
             }
             else if (_colorSupport.HasFlag(ColorSupportLevel.Ansi256))
             {
-                return WriteAnsi256(color, true) + WriteAnsi16(background, false) + text.ToString();
+                WriteAnsi256(color, true);
+                WriteAnsi256(background, false);
             }
             else if (_colorSupport.HasFlag(ColorSupportLevel.Basic))
             {
-                return WriteAnsi16(color, true) + WriteAnsi16(background, false) + text.ToString();
+                WriteAnsi16(color, true);
+                WriteAnsi16(background, false);
             }
 
-            return text.ToString();
+            Append(text);
         }
 
-        private string WriteTrueColor(Color color, bool foreground)
+        private void WriteTrueColor(Color color, bool foreground)
         {
             var start = 7;
             var total = start + StringLength(color.R) + StringLength(color.G) + StringLength(color.B) + 3;
@@ -75,10 +126,10 @@ namespace Nyancat.Graphics.Colors
 
             var output = esc.Slice(0, idx);
 
-            return output.ToString();
+            Append(output);
         }
 
-        private string WriteAnsi256(Color color, bool foreground)
+        private void WriteAnsi256(Color color, bool foreground)
         {
             var start = 7;
             var ansi = ColorConvert.ToAnsi256(color);
@@ -101,12 +152,12 @@ namespace Nyancat.Graphics.Colors
             sub[0] = 'm';
             idx++;
 
-            return esc.Slice(0, idx).ToString();
+            Append(esc.Slice(0, idx));
         }
 
-        private string WriteAnsi16(Color color, bool foreground)
+        private void WriteAnsi16(Color color, bool foreground)
         {
-            
+
             var start = 2;
             var ansi = ColorConvert.ToAnsi16(color);
             ansi = foreground ? ansi : ansi + 10;
@@ -118,11 +169,11 @@ namespace Nyancat.Graphics.Colors
 
             var idx = start;
             var sub = esc.Slice(idx);
-            idx += WriteByte(sub, (byte) ansi);
+            idx += WriteByte(sub, (byte)ansi);
             sub[0] = 'm';
             idx++;
 
-            return esc.Slice(0, idx).ToString();
+            Append(esc.Slice(0, idx));
         }
 
         private int WriteByte(Span<char> buffer, byte value)
@@ -157,20 +208,6 @@ namespace Nyancat.Graphics.Colors
             }
 
             return 3;
-        }
-
-        public ReadOnlySpan<char> Reset()
-        {
-            if (
-                _colorSupport.HasFlag(ColorSupportLevel.TrueColor) ||
-                _colorSupport.HasFlag(ColorSupportLevel.Ansi256) ||
-                _colorSupport.HasFlag(ColorSupportLevel.Basic)
-            )
-            {
-                return "\x1b[0m";
-            }
-
-            return "";
         }
     }
 }

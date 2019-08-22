@@ -2,7 +2,7 @@
 
 Nyancat running on dotnet core.
 
-[![Build status][appveyor-ci-badge]][appveyor-ci-url]
+[![Build status][ci-badge]][ci-url]
 [![NuGet][nuget-package-badge]][nuget-package-url]
 
 ![Nyancat terminal](docs/nyancat-console.png)
@@ -47,8 +47,8 @@ make
 make install
 ```
 
-[appveyor-ci-url]: https://ci.appveyor.com/project/nickvandyck/nyancat-cs/branch/master
-[appveyor-ci-badge]: https://img.shields.io/appveyor/ci/nickvandyck/nyancat-cs/master.svg?label=appveyor&style=flat-square
+[ci-url]: https://github.com/nickvdyck/nyancat.cs
+[ci-badge]: https://github.com/nickvdyck/nyancat.cs/workflows/Main%20Workflow/badge.svg
 
 [nuget-package-url]: https://www.nuget.org/packages/nyancat/
 [nuget-package-badge]: https://img.shields.io/nuget/v/nyancat.svg?style=flat-square&label=nuget

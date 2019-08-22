@@ -9,26 +9,24 @@
     <Copyright>Copyright © Nick Van Dyck</Copyright>
     <NeutralLanguage>en-UK</NeutralLanguage>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/nickvdyck/nyancat.cs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nickvdyck/nyancat.cs.git</RepositoryUrl>
     <PackageReleaseNotes>See $(PackageProjectUrl)/blob/master/CHANGELOG.md#v$(VersionPrefix) for release notes.</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
-    <IsPackable>false</IsPackable>
-    <NoPackageAnalysis>true</NoPackageAnalysis>
+    
     <LangVersion>Latest</LangVersion>
-
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-
-    <GenerateFullPaths Condition="'$(VSCODE_PID)' != ''">true</GenerateFullPaths>
-    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory).build/obj/$(MSBuildProjectName)</BaseIntermediateOutputPath>
-    <BaseOutputPath>$(MSBuildThisFileDirectory).build/bin/$(MSBuildProjectName)</BaseOutputPath>
-
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateFullPaths Condition="'$(VSCODE_CWD)' != ''">true</GenerateFullPaths>
+    <BuildDirectory>$(MSBuildThisFileDirectory).build/</BuildDirectory>
+    <BaseIntermediateOutputPath>$(BuildDirectory)obj/$(MSBuildProjectName)/</BaseIntermediateOutputPath>
+    <BaseOutputPath>$(BuildDirectory)bin/$(MSBuildProjectName)/</BaseOutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(OS)' == 'Unix'">
-    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory).build/obj/unix/$(MSBuildProjectName)</BaseIntermediateOutputPath>
-    <BaseOutputPath>$(MSBuildThisFileDirectory).build/bin/unix/$(MSBuildProjectName)</BaseOutputPath>
-  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" Visible="false" PackagePath=""/>
+  </ItemGroup>
 
 </Project>

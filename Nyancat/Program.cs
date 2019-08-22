@@ -15,6 +15,7 @@ namespace Nyancat
         {
             bool showIntro = false;
             bool showHelp = false;
+            bool showVersion = false;
             bool noCounter = false;
             bool noTitle = false;
             bool sound = false;
@@ -27,11 +28,18 @@ namespace Nyancat
                 { "t|no-title", "Do not set the titlebar text", t => noTitle = true },
                 { "f|frames=", "Display the requested number of frames, then quit", (int f) => frames = f },
                 { "?|h|help", "Show help information", h => showHelp = h != null },
+                { "v|version", "Show version information", v => showVersion = v != null },
             };
 
             try
             {
                 var extra = options.Parse(args);
+
+                if (showVersion)
+                {
+                    Console.WriteLine(GetVersion());
+                    return 0;
+                }
 
                 if (showHelp)
                 {
@@ -70,7 +78,7 @@ namespace Nyancat
                 Console.WriteLine($"{GetName()}: {GetVersion()}");
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
-                Console.WriteLine("Try `nyancat --help' for more information.");
+                Console.WriteLine($"Try `{GetName()} --help' for more information.");
                 return 1;
             }
         }

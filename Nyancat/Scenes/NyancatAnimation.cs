@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 
-namespace Nyancat
+namespace Nyancat.Scenes
 {
-    public class NyancatAnimation
+    public static class NyancatAnimation
     {
         public const int FRAME_WIDTH = 64;
         public const int FRAME_HEIGHT = 64;
+
+        #region Frames
 
         static readonly string[] Frame0 = new string[FRAME_HEIGHT]
         {
@@ -823,7 +825,9 @@ namespace Nyancat
             ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
         };
 
-        public static readonly List<string[]> Frames = new List<string[]>
+        #endregion
+
+        public static readonly IReadOnlyCollection<string[]> Frames = new List<string[]>
         {
             Frame0,
             Frame1,

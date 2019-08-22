@@ -6,6 +6,9 @@ CONFIGURATION	:= Release
 CLI_PROJECT		:= Nyancat/Nyancat.csproj
 CLI_TOOL		:= nyancat
 
+VERSION			= $(shell xmllint --xpath "/Project/PropertyGroup/VersionPrefix/text()" Version.props)
+VERSION_SUFFIX	:= -build.
+
 purge: clean
 	rm -rf .build
 
@@ -14,14 +17,26 @@ clean:
 	dotnet clean
 
 default: clean setup
-	dotnet build -c $(CONFIGURATION)
-	dotnet pack $(CLI_TOOL) -c $(CONFIGURATION) --no-build -o $(ARTIFACTS)
+	$(MAKE) package
+
+package:
+	dotnet build $(CLI_PROJECT) -c $(CONFIGURATION) \
+		-p:BuildNumber=$(shell git rev-list --count HEAD) \
+		-p:SourceRevisionId=$(shell git rev-parse HEAD)
+	dotnet pack $(CLI_TOOL) --configuration $(CONFIGURATION) \
+		--no-build \
+		--output $(ARTIFACTS) \
+		-p:PackAsTool=true \
+		-p:BuildNumber=$(shell git rev-list --count HEAD) \
+		-p:SourceRevisionId=$(shell git rev-parse HEAD)
 
 install:
-	dotnet tool install -g --add-source $(ARTIFACTS) $(CLI_TOOL)
+	dotnet tool install --global --add-source $(ARTIFACTS) \
+		--version $(VERSION)$(VERSION_SUFFIX)* \
+		$(CLI_TOOL)
 
 uninstall:
-	dotnet tool uninstall -g $(CLI_TOOL)
+	dotnet tool uninstall --global $(CLI_TOOL)
 
 setup:
 	dotnet restore

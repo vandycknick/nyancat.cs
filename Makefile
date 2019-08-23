@@ -16,6 +16,9 @@ clean:
 	rm -rf artifacts
 	dotnet clean
 
+setup:
+	dotnet restore
+
 default: clean setup
 	$(MAKE) package
 
@@ -23,7 +26,7 @@ package:
 	dotnet build $(CLI_PROJECT) -c $(CONFIGURATION) \
 		-p:BuildNumber=$(shell git rev-list --count HEAD) \
 		-p:SourceRevisionId=$(shell git rev-parse HEAD)
-	dotnet pack $(CLI_TOOL) --configuration $(CONFIGURATION) \
+	dotnet pack $(CLI_PROJECT) --configuration $(CONFIGURATION) \
 		--no-build \
 		--output $(ARTIFACTS) \
 		-p:PackAsTool=true \
@@ -37,6 +40,3 @@ install:
 
 uninstall:
 	dotnet tool uninstall --global $(CLI_TOOL)
-
-setup:
-	dotnet restore

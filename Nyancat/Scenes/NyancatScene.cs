@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -147,10 +148,9 @@ namespace Nyancat.Scenes
                 Graphics.Draw(message, position, Color.White, _colorMap[',']);
             }
 
-            if (gameTime.ElapsedGameTime.Milliseconds < 100)
-            {
-                Thread.Sleep(100 - gameTime.ElapsedGameTime.Milliseconds);
-            }
+            const int defaultSleep = 90;
+            var sleep = (defaultSleep * 2) - gameTime.ElapsedGameTime.Milliseconds;
+            Thread.Sleep(Math.Clamp(sleep, 0, defaultSleep));
 
             Graphics.Render();
         }

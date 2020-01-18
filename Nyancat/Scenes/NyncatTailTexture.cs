@@ -1,26 +1,27 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Nyancat.Graphics;
+using Nyancat.Graphics.Colors;
 
 namespace Nyancat.Scenes
 {
     public class NyncatTailTexture : ITexture
     {
-        public int Width => _width;
+        public int Width { get; private set; }
 
-        public int Height => _height;
+        public int Height { get; private set; } = 18;
 
-        private const int _height = 18;
-        private int _width;
-        private int _id;
-        private Dictionary<char, Color> _colorMap;
-        private string _rainbow = ",,>>&&&+++###==;;;,,";
+        private readonly int _id;
+        private readonly Dictionary<char, Color> _colorMap;
+        private readonly string _rainbow = ",,>>&&&+++###==;;;,,";
+        private readonly bool _hasColorSupport;
 
         public NyncatTailTexture(int id, int width, Dictionary<char, Color> colorMap)
         {
             _id = id;
-            _width = width;
+            Width = width;
             _colorMap = colorMap;
+            _hasColorSupport = ColorSupport.Detect() != ColorSupportLevel.None;
         }
 
         public ConsoleChar[,] ToBuffer()
@@ -46,7 +47,7 @@ namespace Nyancat.Scenes
                         var pixel = _rainbow[index];
                         buffer[row, col] = new ConsoleChar
                         {
-                            Character = pixel,
+                            Character = _hasColorSupport ? ' ' : pixel,
                             ForeGround = _colorMap[pixel],
                             Background = _colorMap[pixel],
                         };

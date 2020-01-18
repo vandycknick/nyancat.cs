@@ -1,27 +1,29 @@
 using System.Collections.Generic;
 using System.Drawing;
+using Nyancat.Graphics.Colors;
 
 namespace Nyancat.Graphics
 {
     public class AsciiTexture : ITexture
     {
-        public int Width => _frame[0].Length * _scale;
+        public int Width { get; private set; }
 
-        public int Height => _frame.Length;
+        public int Height { get; private set; }
 
-        private string[] _frame { get; set; }
-
-        private Dictionary<char, Color> _colorMap;
-
-        private int _scale;
-
+        private readonly string[] _frame;
+        private readonly Dictionary<char, Color> _colorMap;
+        private readonly int _scale;
         private ConsoleChar[,] _buffer;
+        private readonly bool _hasColorSupport;
 
         public AsciiTexture(string[] frame, Dictionary<char, Color> colorMap, int scale = 1)
         {
             _frame = frame;
             _colorMap = colorMap;
             _scale = scale;
+            Width = _frame[0].Length * _scale;
+            Height = _frame.Length;
+            _hasColorSupport = ColorSupport.Detect() != ColorSupportLevel.None;
         }
 
         public ConsoleChar[,] ToBuffer()
@@ -39,7 +41,7 @@ namespace Nyancat.Graphics
                         {
                             _buffer[row, col + i] = new ConsoleChar
                             {
-                                Character = ch,
+                                Character = _hasColorSupport ? ' ' : ch,
                                 ForeGround = _colorMap[ch],
                                 Background = _colorMap[ch],
                             };

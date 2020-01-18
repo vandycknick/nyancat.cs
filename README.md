@@ -4,6 +4,7 @@ Nyancat running on dotnet core.
 
 [![Build status][ci-badge]][ci-url]
 [![NuGet][nuget-package-badge]][nuget-package-url]
+[![feedz.io][feedz-package-badge]][feedz-package-url]
 
 ![Nyancat terminal](docs/nyancat-console.png)
 
@@ -52,3 +53,6 @@ make install
 
 [nuget-package-url]: https://www.nuget.org/packages/nyancat/
 [nuget-package-badge]: https://img.shields.io/nuget/v/nyancat.svg?style=flat-square&label=nuget
+
+[feedz-package-url]: https://f.feedz.io/nvd/nyancat-cs/packages/nyancat/latest/download
+[feedz-package-badge]: https://img.shields.io/badge/endpoint.svg?url=https%3A%2F%2Ff.feedz.io%2Fnvd%2Fnyancat-cs%2Fshield%2Fnyancat%2Flatest&label=nyancat

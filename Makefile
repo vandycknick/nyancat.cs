@@ -27,6 +27,7 @@ package:
 	dotnet pack $(CLI_PROJECT) --configuration $(CONFIGURATION) \
 		--no-build \
 		--output $(ARTIFACTS) \
+		--include-symbols \
 		-p:PackAsTool=true
 
 install:

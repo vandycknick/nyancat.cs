@@ -15,6 +15,7 @@
     
     <LangVersion>Latest</LangVersion>
     <NoPackageAnalysis>true</NoPackageAnalysis>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateFullPaths Condition="'$(VSCODE_CWD)' != ''">true</GenerateFullPaths>

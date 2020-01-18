@@ -8,9 +8,9 @@ CLI_TOOL		:= nyancat
 
 purge: clean
 	rm -rf .build
+	rm -rf artifacts
 
 clean:
-	rm -rf artifacts
 	dotnet clean
 
 run:
@@ -27,8 +27,15 @@ package:
 	dotnet pack $(CLI_PROJECT) --configuration $(CONFIGURATION) \
 		--no-build \
 		--output $(ARTIFACTS) \
+		--include-symbols
+
+package-public:
+	dotnet build $(CLI_PROJECT) -c $(CONFIGURATION) /p:PublicRelease=true
+	dotnet pack $(CLI_PROJECT) --configuration $(CONFIGURATION) \
+		--no-build \
+		--output $(ARTIFACTS) \
 		--include-symbols \
-		-p:PackAsTool=true
+		/p:PublicRelease=true
 
 install:
 	dotnet tool install --global --add-source $(ARTIFACTS) \

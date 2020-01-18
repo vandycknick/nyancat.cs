@@ -6,6 +6,7 @@
     <ToolCommandName>nyancat</ToolCommandName>
     <AssemblyName>nyancat</AssemblyName>
     <TieredCompilation>true</TieredCompilation>
+    <PackAsTool>true</PackAsTool>
   </PropertyGroup>
 
   <ItemGroup>

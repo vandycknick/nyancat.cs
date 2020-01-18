@@ -10,11 +10,11 @@ namespace Nyancat.Graphics
     {
         private readonly IGraphicsDevice Graphics;
         private readonly ISceneManager SceneManager;
-        private readonly IApplicationLifetime _appLifeTime;
+        private readonly IHostApplicationLifetime _appLifeTime;
 
         private Task RenderLoop;
 
-        public ConsoleGraphicsHost(IApplicationLifetime appLifetime, IGraphicsDevice graphics, ISceneManager sceneManager)
+        public ConsoleGraphicsHost(IHostApplicationLifetime appLifetime, IGraphicsDevice graphics, ISceneManager sceneManager)
         {
             Graphics = graphics;
             SceneManager = sceneManager;

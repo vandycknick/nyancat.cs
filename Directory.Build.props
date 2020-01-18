@@ -1,7 +1,5 @@
 <Project>
 
-  <Import Project="Version.props" />
-
   <PropertyGroup>
     <Authors>Nick Van Dyck</Authors>
     <Product>nyancat</Product>
@@ -28,5 +26,14 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" Visible="false" PackagePath=""/>
   </ItemGroup>
+
+  <ItemGroup Condition="$(IsPackable) == 'true'">
+    <PackageReference Include="Nerdbank.GitVersioning">
+      <Version>3.0.50</Version>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
 
 </Project>

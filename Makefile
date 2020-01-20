@@ -39,7 +39,7 @@ package-public:
 
 install:
 	dotnet tool install --global --add-source $(ARTIFACTS) \
-		--version $$(nbgv get-version -v NuGetPackageVersion) \
+		--version $$(minver -t v -a minor -v e) \
 		$(CLI_TOOL)
 
 uninstall:

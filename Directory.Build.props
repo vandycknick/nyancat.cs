@@ -22,6 +22,9 @@
     <BuildDirectory>$(MSBuildThisFileDirectory).build/</BuildDirectory>
     <BaseIntermediateOutputPath>$(BuildDirectory)obj/$(MSBuildProjectName)/</BaseIntermediateOutputPath>
     <BaseOutputPath>$(BuildDirectory)bin/$(MSBuildProjectName)/</BaseOutputPath>
+
+    <MinVerAutoIncrement>minor</MinVerAutoIncrement>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,8 +32,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(IsPackable) == 'true'">
-    <PackageReference Include="Nerdbank.GitVersioning">
-      <Version>3.0.50</Version>
+    <PackageReference Include="MinVer" Version="2.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />

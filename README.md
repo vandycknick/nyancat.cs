@@ -49,7 +49,7 @@ make install
 ```
 
 [ci-url]: https://github.com/nickvdyck/nyancat.cs
-[ci-badge]: https://github.com/nickvdyck/nyancat.cs/workflows/Main%20Workflow/badge.svg
+[ci-badge]: https://github.com/nickvdyck/nyancat.cs/workflows/CI/badge.svg
 
 [nuget-package-url]: https://www.nuget.org/packages/nyancat/
 [nuget-package-badge]: https://img.shields.io/nuget/v/nyancat.svg?style=flat-square&label=nuget

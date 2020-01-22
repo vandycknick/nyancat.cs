@@ -3,7 +3,7 @@
 1. Create an annotated tag `-a` with a new version number. Replace
 pattern between`{}` with the new version number.
 ```
-git tag -a v{x.x.x}
+git tag v{x.x.x}
 ```
 This should open up vim and allow you to add some extra information about 
 the current release. 

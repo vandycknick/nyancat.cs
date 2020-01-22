@@ -10,27 +10,33 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v1
+    - name: Setup Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.x
+
+    - name: Setup Go Environment
+      run: |
+        echo "::set-env name=GOPATH::$(go env GOPATH)"
+        echo "::add-path::$(go env GOPATH)/bin"
+      shell: bash
 
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.101'
-    
+
+    - name: Checkout code
+      uses: actions/checkout@v1
+
     - name: Package app
       run: make package-public
-
-    - name: Setup go
-      uses: actions/setup-go@v1
-      with:
-        go-version: '1.13.6'
 
     - name: Create Release
       shell: bash
       run: |
+        go env
         go get -v -u github.com/tcnksm/ghr
-        echo $PATH
-        export PATH=$GOPATH/bin:$PATH
         ghr -t ${{ secrets.GITHUB_TOKEN }} -b 'Nyancat release. Look at the changelog for more info' ${{ github.ref }} ./artifacts/
 
     - name: Push to feedz.io

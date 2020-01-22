@@ -1,0 +1,38 @@
+name: Release Workflow
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.101'
+    
+    - name: Package app
+      run: make package-public
+
+    - name: Setup go
+      uses: actions/setup-go@v1
+      with:
+        go-version: '1.13.6'
+
+    - name: Create Release
+      shell: bash
+      run: |
+        go get -v -u github.com/tcnksm/ghr
+        ghr -t ${{ secrets.GITHUB_TOKEN }} -b 'Nyancat release. Look at the changelog for more info' ${{ github.ref }} ./artifacts/
+
+    - name: Push to feedz.io
+      run: dotnet nuget push artifacts/**/*.nupkg --api-key ${{ secrets.FEEDZ_IO_TOKEN }} --source https://f.feedz.io/nvd/nyancat-cs/nuget/index.json --skip-duplicate
+
+    - name: Push to nuget
+      run: dotnet nuget push artifacts/**/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --skip-duplicate

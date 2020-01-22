@@ -10,7 +10,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/nickvdyck/nyancat.cs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nickvdyck/nyancat.cs.git</RepositoryUrl>
-    <PackageReleaseNotes>See $(PackageProjectUrl)/blob/master/CHANGELOG.md#v$(VersionPrefix) for release notes.</PackageReleaseNotes>
+    <PackageReleaseNotes>See $(PackageProjectUrl)/blob/master/CHANGELOG.md for release notes.</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     
     <LangVersion>Latest</LangVersion>
@@ -35,8 +35,6 @@
     <PackageReference Include="MinVer" Version="2.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
-
 
 </Project>

@@ -28,20 +28,25 @@ When everything is installed just type `nyancat` in your favourite terminal and 
 ## Usage
 
 ```sh
+nyancat: 1.2.0
+
+Terminal nyancat runner
+
 Usage: nyancat [options]
 
-Options:
-  --version             Show version information
-  -i|--intro            Show the introduction / about information at startup
-  -n|--no-counter       Do not display the timer
-  -s|--no-title         Do not set the title bar text
-  -f|--frames <FRAMES>  Display the requested number of frames, then quit
-  -?|-h|--help          Show help information
+Options
+
+  -i, --intro                Show the introduction / about information at startup
+  -n, --no-counter           Do not display the timer
+  -t, --no-title             Do not set the titlebar text
+  -f, --frames=VALUE         Display the requested number of frames, then quit
+  -?, -h, --help             Show help information
+  -v, --version              Show version information
 ```
 
 ## Local installation
 
-Run the following commands to do a release build and install the newly build assembly into your path:
+Run the following commands to create a release build and install the tool into your path:
 
 ```sh
 make

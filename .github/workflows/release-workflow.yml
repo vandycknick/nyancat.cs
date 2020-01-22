@@ -29,6 +29,8 @@ jobs:
       shell: bash
       run: |
         go get -v -u github.com/tcnksm/ghr
+        echo $PATH
+        export PATH=$GOPATH/bin:$PATH
         ghr -t ${{ secrets.GITHUB_TOKEN }} -b 'Nyancat release. Look at the changelog for more info' ${{ github.ref }} ./artifacts/
 
     - name: Push to feedz.io

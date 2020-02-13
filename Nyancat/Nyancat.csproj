@@ -2,16 +2,41 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
     <ToolCommandName>nyancat</ToolCommandName>
     <AssemblyName>nyancat</AssemblyName>
-    <TieredCompilation>true</TieredCompilation>
+
+    <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.1" />
-    <PackageReference Include="Mono.Options" Version="6.6.0.161" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20104.2" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(Mode)' != ''">
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="1.0.0-alpha-*" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Mode)' == 'CoreRT-Moderate' or '$(Mode)' == 'CoreRT-High' or '$(Mode)' == 'CoreRT-ReflectionFree'">
+    <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+    <IlcOptimizationPreference>Size</IlcOptimizationPreference>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Mode)' == 'CoreRT-High' or '$(Mode)' == 'CoreRT-ReflectionFree'">
+    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+    <IlcInvariantGlobalization>true</IlcInvariantGlobalization>
+    <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Mode)' == 'CoreRT-High'">
+      <IlcArg Include="--removefeature:EventSource" />
+      <IlcArg Include="--removefeature:FrameworkStrings" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Mode)' == 'CoreRT-ReflectionFree'">
+    <IlcDisableReflection>true</IlcDisableReflection>
+  </PropertyGroup>
 
 </Project>

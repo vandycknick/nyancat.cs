@@ -22,7 +22,7 @@ jobs:
         dotnet-version: '3.1.101'
     
     - name: Package app
-      run: make package-public
+      run: make package
 
     - name: Push packages
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'

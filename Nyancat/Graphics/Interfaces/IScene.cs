@@ -4,7 +4,7 @@ namespace Nyancat.Graphics
     {
         void Initialize();
 
-        void Update();
+        void Update(IGameTime gameTime);
 
         void Render(IGameTime gameTime);
     }

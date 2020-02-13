@@ -17,13 +17,9 @@ namespace Nyancat.Drivers
             set => Console.Title = value;
         }
 
-        public int Height => _height;
+        public int Height { get; private set; } = Console.WindowHeight;
 
-        private int _height = Console.WindowHeight;
-
-        public int Width => _width;
-
-        private int _width = Console.WindowWidth;
+        public int Width { get; private set; } = Console.WindowWidth;
 
         public Action WindowResize { private get; set; }
 
@@ -47,10 +43,10 @@ namespace Nyancat.Drivers
             var h = Console.WindowHeight;
             var w = Console.WindowWidth;
 
-            if (_height != h || _width != w)
+            if (Height != h || Width != w)
             {
-                _height = h;
-                _width = w;
+                Height = h;
+                Width = w;
                 WindowResize();
             }
         }

@@ -5,6 +5,7 @@ ARTIFACTS 		:= $(shell pwd)/artifacts
 CONFIGURATION	:= Release
 CLI_PROJECT		:= Nyancat/Nyancat.csproj
 CLI_TOOL		:= nyancat
+RUNTIME 		:= linux-x64
 
 purge: clean
 	rm -rf .build
@@ -22,6 +23,10 @@ setup:
 default: clean setup
 	$(MAKE) package
 
+restore:
+	dotnet restore
+	dotnet tool restore
+
 package:
 	dotnet build $(CLI_PROJECT) -c $(CONFIGURATION)
 	dotnet pack $(CLI_PROJECT) --configuration $(CONFIGURATION) \
@@ -29,17 +34,15 @@ package:
 		--output $(ARTIFACTS) \
 		--include-symbols
 
-package-public:
-	dotnet build $(CLI_PROJECT) -c $(CONFIGURATION) /p:PublicRelease=true
-	dotnet pack $(CLI_PROJECT) --configuration $(CONFIGURATION) \
-		--no-build \
-		--output $(ARTIFACTS) \
-		--include-symbols \
-		/p:PublicRelease=true
+package-native:
+	dotnet publish $(CLI_PROJECT) -c $(CONFIGURATION) \
+		--output $(ARTIFACTS)/$(RUNTIME) \
+		--runtime $(RUNTIME) \
+		/p:Mode=CoreRT-High
 
 install:
 	dotnet tool install --global --add-source $(ARTIFACTS) \
-		--version $$(minver -t v -a minor -v e) \
+		--version $$(dotnet minver -t v -a minor -v e) \
 		$(CLI_TOOL)
 
 uninstall:

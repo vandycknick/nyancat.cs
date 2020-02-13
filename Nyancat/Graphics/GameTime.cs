@@ -2,23 +2,21 @@ using System;
 
 namespace Nyancat.Graphics
 {
-    public class GameTime : IGameTime
+    public struct GameTime : IGameTime
     {
-        public TimeSpan ElapsedGameTime => _elapsedTime;
-        public TimeSpan TotalGameTime => _totalTime;
-
-        private TimeSpan _elapsedTime;
-        private TimeSpan _totalTime;
-
-        public GameTime()
+        public static GameTime Zero = new GameTime
         {
-            _elapsedTime = _totalTime = TimeSpan.Zero;
-        }
+            ElapsedGameTime = TimeSpan.Zero,
+            TotalGameTime = TimeSpan.Zero,
+        };
+
+        public TimeSpan ElapsedGameTime { get; private set; }
+        public TimeSpan TotalGameTime { get; private set; }
 
         public void Update(TimeSpan elapsed)
         {
-            _elapsedTime = elapsed;
-            _totalTime += elapsed;
+            ElapsedGameTime = elapsed;
+            TotalGameTime += elapsed;
         }
     }
 }

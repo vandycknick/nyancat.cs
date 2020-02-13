@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Nyancat.Scenes
 {
-    public static class NyancatAnimation
+    public static class NyancatFrames
     {
         public const int FRAME_WIDTH = 64;
         public const int FRAME_HEIGHT = 64;

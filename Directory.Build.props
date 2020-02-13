@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(IsPackable) == 'true'">
-    <PackageReference Include="MinVer" Version="2.0.0">
+    <PackageReference Include="MinVer" Version="2.1.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>

@@ -9,14 +9,16 @@ namespace Nyancat.Scenes
     public class IntroScene : IScene
     {
         private readonly IGraphicsDevice Graphics;
-        private readonly ISceneManager SceneManager;
 
         private List<string> _messages;
+        private readonly Action _gotoNextScene;
 
-        public IntroScene(IGraphicsDevice graphics, ISceneManager sceneManager)
+        private const int TIME_TO_SHOW = 5;
+
+        public IntroScene(IGraphicsDevice graphics, Action gotoNextScene)
         {
             Graphics = graphics;
-            SceneManager = sceneManager;
+            _gotoNextScene = gotoNextScene;
         }
 
         public void Initialize()
@@ -29,38 +31,37 @@ namespace Nyancat.Scenes
             };
         }
 
-        public void Update()
+        public void Update(IGameTime gameTime)
         {
+            var moveOn = TIME_TO_SHOW - gameTime.TotalGameTime.Seconds;
+
+            if (moveOn < 0)
+            {
+                _gotoNextScene();
+                return;
+            }
         }
 
         public void Render(IGameTime gameTime)
         {
-            var moveOn = 5 - gameTime.TotalGameTime.Seconds;
-
-            if (moveOn < 0)
-            {
-                SceneManager.GoTo<NyancatScene>();
-                return;
-            }
-
             Graphics.Clear(Color.Black);
 
             var row = 3;
 
-            foreach(var line in _messages)
+            foreach (var line in _messages)
             {
-                int col = (Graphics.Width - line.Length) /2;
+                int col = (Graphics.Width - line.Length) / 2;
                 var postion = new Position
                 {
                     Row = row,
-                    Col =col
+                    Col = col
                 };
 
                 Graphics.Draw(line, postion, Color.White, Color.Black);
                 row += 2;
             }
 
-            var starting = $"Starting in {(5 - gameTime.TotalGameTime.Seconds)}...";
+            var starting = $"Starting in {TIME_TO_SHOW - gameTime.TotalGameTime.Seconds}...";
             var position = new Position
             {
                 Row = row,

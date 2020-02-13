@@ -5,7 +5,6 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using Microsoft.Extensions.Options;
 using Nyancat.Graphics;
 using Nyancat.Graphics.Colors;
 using Nyancat.Media;
@@ -15,7 +14,7 @@ namespace Nyancat.Scenes
     public class NyancatScene : IScene
     {
         private readonly IGraphicsDevice Graphics;
-        private readonly NyancatSceneOptions SceneOptions;
+        private readonly NyancatOptions SceneOptions;
 
         private readonly Stopwatch counter = new Stopwatch();
 
@@ -46,15 +45,15 @@ namespace Nyancat.Scenes
             { '%', ColorConvert.FromHex("#d787af") },   /* Pink cheeks */
         };
 
-        public NyancatScene(IGraphicsDevice graphics, IOptions<NyancatSceneOptions> sceneOptionsAccessor)
+        public NyancatScene(IGraphicsDevice graphics, NyancatOptions sceneOptions)
         {
             Graphics = graphics;
-            SceneOptions = sceneOptionsAccessor.Value;
+            SceneOptions = sceneOptions;
         }
 
         public void Initialize()
         {
-            foreach (var frame in NyancatAnimation.Frames)
+            foreach (var frame in NyancatFrames.Frames)
             {
                 _textureBatch.Add(new AsciiTexture(frame, _colorMap, 2));
             }
@@ -94,7 +93,7 @@ namespace Nyancat.Scenes
             return false;
         }
 
-        public void Update()
+        public void Update(IGameTime gameTime)
         {
             if (ShouldExit())
             {

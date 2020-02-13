@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.Text;
 using Nyancat.Drivers;
 using Nyancat.Graphics.Colors;
 

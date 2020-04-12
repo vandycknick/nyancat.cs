@@ -8,7 +8,7 @@ namespace Nyancat
     {
         public static Task<int> Main(string[] args)
         {
-            var rootCommand = new RootCommand
+            var command = new RootCommand
             {
                 new Option(
                     new string[] { "-i", "--intro" },
@@ -36,9 +36,8 @@ namespace Nyancat
                 },
             };
 
-            rootCommand.Description = "Terminal nyancat runner";
-
-            rootCommand.Handler = CommandHandler.Create<bool, bool, bool, int>((intro, noCounter, noTitle, frames) =>
+            command.Description = "Terminal nyancat runner";
+            command.Handler = CommandHandler.Create<bool, bool, bool, int>((intro, noCounter, noTitle, frames) =>
             {
                 var sceneOptions = new NyancatOptions
                 {
@@ -53,8 +52,7 @@ namespace Nyancat
                 game.Run();
             });
 
-            // Parse the incoming args and invoke the handler
-            return rootCommand.InvokeAsync(args);
+            return command.InvokeAsync(args);
         }
     }
 }

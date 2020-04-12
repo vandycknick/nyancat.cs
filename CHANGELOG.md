@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v1.3.0]
+### Added
+- Package as native single file executable
+
+### Changed
+- Switch to using system.commandline package
+
+
 ## [v1.2.0] - 2020-01-22
 ### Changed
 - Moved to mono.options for cli arguments parsing
@@ -12,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Nyancat animation not running in sync
+
 
 ## [v1.1.0] - 2019-02-28
 ### Added
@@ -26,6 +35,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Changed
 - Improved linux console driver. No dependencies on external library
 
+
 ## [v1.0.0] - 2018-07-19
 ### Added
 - Ability to switch between scenes
@@ -37,10 +47,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Rainbow tail not rendering correct
 
+
 ## [v0.5.0]
 Minor improvements and bug fixes
  - Fix NoTitle commandline flag not working
  - Code cleanup and consistency
+
 
 ## [v0.4.0]
 New features and improvements
@@ -48,11 +60,13 @@ New features and improvements
  - Rewrite implemententation and start using HostBuilder
  - Fix rainbow tail
 
+
 ## [v0.3.0]
 Minor improvements and bug fixes
  - Added counter to the bottom of the screen
  - Added frame0 to frames array 🤦‍♂️
  - Trying out tiered compilation
+
 
 ## [v0.2.0]
 Minor improvements
@@ -60,6 +74,7 @@ Minor improvements
  - Add option to reduce the amount of frames displayed
  - Add option to not change the console title
  - Added version and basic help instructions `--version` and `--help`
+
 
 ## [v0.1.0]
 Initial release

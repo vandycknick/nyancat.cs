@@ -32,8 +32,8 @@ jobs:
     - name: Package app
       run: make package
 
-    - name: Build native linux
-      run: make package-native RUNTIME=linux-x64
+    # - name: Build native linux
+    #   run: make package-native RUNTIME=linux-x64
 
     - name: Get the version
       id: get_version

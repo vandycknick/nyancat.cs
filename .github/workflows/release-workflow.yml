@@ -33,7 +33,7 @@ jobs:
       run: make package
 
     - name: Build native linux
-      run: make package-native RUNTIME=linux-64
+      run: make package-native RUNTIME=linux-x64
 
     - name: Get the version
       id: get_version

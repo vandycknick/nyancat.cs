@@ -13,4 +13,4 @@ the current release.
 git push origin --tags
 ```
 
-3. Pipeline is configured to automatically push release artifacts to nuget and github release page.
+3. Pipeline is configured to automatically push release artefacts to nuget and github release pages.

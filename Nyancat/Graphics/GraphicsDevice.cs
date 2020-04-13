@@ -1,17 +1,25 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using Nyancat.Drivers;
 using Nyancat.Graphics.Colors;
 
 namespace Nyancat.Graphics
 {
-    public class ConsoleChar
+    public struct ConsoleChar : IEquatable<ConsoleChar>
     {
+        public static readonly ConsoleChar Empty = new ConsoleChar();
+
         public char Character { get; set; }
 
         public Color ForeGround { get; set; }
 
         public Color Background { get; set; }
+
+        public bool Equals([AllowNull] ConsoleChar other) =>
+            other.Character == Character &&
+            other.ForeGround == ForeGround &&
+            other.Background == Background;
     }
 
     public sealed class GraphicsDevice : IGraphicsDevice
@@ -51,6 +59,21 @@ namespace Nyancat.Graphics
             _cols = _consoleDriver.Width;
 
             _backBuffer = new ConsoleChar[_rows, _cols];
+            ClearBackBuffer();
+        }
+
+        private void ClearBackBuffer()
+        {
+            var rank = _backBuffer.Rank;
+
+            for (var i = 0; i < rank; i++)
+            {
+                var length = _backBuffer.GetLength(i);
+                for (var l = 0; l < length; l++)
+                {
+                    _backBuffer[i,l] = ConsoleChar.Empty;
+                }
+            }
         }
 
         public void Clear(Color color)
@@ -119,11 +142,11 @@ namespace Nyancat.Graphics
             _frontBuffer.Clear();
             for (var row = 0; row < _rows; row++)
             {
-                var previous = _backBuffer[row, 0] ?? _backGround;
+                var previous = _backBuffer[row, 0].Equals(ConsoleChar.Empty) ? _backGround : _backBuffer[row, 0];
 
                 for (var col = 0; col < _cols; col++)
                 {
-                    var current = _backBuffer[row, col] ?? _backGround;
+                    var current = _backBuffer[row, col].Equals(ConsoleChar.Empty) ? _backGround : _backBuffer[row, col];
 
                     if (previous.ForeGround != current.ForeGround || col == 0)
                     {
@@ -150,7 +173,7 @@ namespace Nyancat.Graphics
             _consoleDriver.Write(_frontBuffer.ResetColor().ToString());
             _consoleDriver.ProcessEvents();
 
-            _backBuffer = new ConsoleChar[_rows, _cols];
+            ClearBackBuffer();
         }
 
         public void Exit()

@@ -1,4 +1,3 @@
-.PHONY: purge clean default install uninstall setup
 .DEFAULT_GOAL := default
 
 ARTIFACTS 		:= $(shell pwd)/artifacts
@@ -43,7 +42,7 @@ package-native:
 	dotnet publish $(CLI_PROJECT) -c $(CONFIGURATION) \
 		--output $(BUILD)/publish/$(RUNTIME) \
 		--runtime $(RUNTIME) \
-		/p:Mode=CoreRT-High
+		/p:Mode=CoreRT-ReflectionFree
 
 	@mkdir -p $(ARTIFACTS)
 	@cp $(BUILD)/publish/$(RUNTIME)/$(CLI_TOOL) $(ARTIFACTS)/$(CLI_TOOL).$(RUNTIME)

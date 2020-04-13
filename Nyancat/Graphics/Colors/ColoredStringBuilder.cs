@@ -157,7 +157,6 @@ namespace Nyancat.Graphics.Colors
 
         private void WriteAnsi16(Color color, bool foreground)
         {
-
             var start = 2;
             var ansi = ColorConvert.ToAnsi16(color);
             ansi = foreground ? ansi : ansi + 10;

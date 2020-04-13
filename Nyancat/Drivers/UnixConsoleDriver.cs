@@ -56,12 +56,7 @@ namespace Nyancat.Drivers
             printf($"{SHOW_CURSOR}{RESET_ALL_ATTRIBUTES}{RESET_CURSOR}{CLEAR_SCREEN}");
         }
 
-        [DllImport("c", CallingConvention = CallingConvention.Cdecl, EntryPoint = "printf")]
-        private static extern int sys_printf(string format, string message);
-
-        private static int printf(string message)
-        {
-            return sys_printf("%s", message);
-        }
+        [DllImport("libc", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int printf(string format);
     }
 }

@@ -11,10 +11,6 @@
     <PackAsTool>true</PackAsTool>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20158.1" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(Mode)' != ''">
     <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="1.0.0-alpha-*" />
   </ItemGroup>

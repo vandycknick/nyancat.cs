@@ -2,12 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.Reflection;
 using System.Threading;
 using Nyancat.Graphics;
 using Nyancat.Graphics.Colors;
-using Nyancat.Media;
 
 namespace Nyancat.Scenes
 {
@@ -15,24 +12,17 @@ namespace Nyancat.Scenes
     {
         private readonly IGraphicsDevice Graphics;
         private readonly NyancatOptions SceneOptions;
-
         private readonly Stopwatch counter = new Stopwatch();
-
-        private readonly Dictionary<char, string> colors = new Dictionary<char, string>();
-        private int _frameId = -1;
-
         private readonly List<ITexture> _textureBatch = new List<ITexture>();
 
+        private int _frameId = -1;
         private ITexture _currentTexture;
-
-        private MediaPlayer _mediaPlayer;
-
         private Dictionary<char, Color> _colorMap = new Dictionary<char, Color>()
         {
             { ',', ColorConvert.FromHex("#00005f") },   /* Blue background */
             { '.', Color.White },                       /* White stars */
             { '\'', Color.Black },                      /* Black border */
-            { '@', ColorConvert.FromHex("ffffd7") },    /* Tan poptart */
+            { '@', ColorConvert.FromHex("#ffffd7") },   /* Tan poptart */
             { '$', Color.Pink },                        /* Pink poptart */
             { '-', ColorConvert.FromHex("#d70087") },   /* Red poptart */
             { '>', Color.Red },                         /* Red rainbow */
@@ -63,17 +53,6 @@ namespace Nyancat.Scenes
                 Graphics.Title = "Nyanyanyanyanyanyanya...";
             }
 
-            if (SceneOptions.Sound)
-            {
-                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                var wav = Path.Combine(path, "Resources", "nyancat.wav");
-                using (FileStream stream = new FileStream(wav, FileMode.Open))
-                {
-                    _mediaPlayer = new MediaPlayer(stream);
-                    _mediaPlayer.PlayLoop();
-                }
-            }
-
             counter.Reset();
             counter.Start();
         }
@@ -97,7 +76,6 @@ namespace Nyancat.Scenes
         {
             if (ShouldExit())
             {
-                _mediaPlayer?.Stop();
                 Graphics.Exit();
                 return;
             }

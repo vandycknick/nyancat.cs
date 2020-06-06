@@ -18,7 +18,7 @@ clean:
 
 .PHONY: run
 run:
-	dotnet run --project $(CLI_PROJECT)
+	dotnet run --project $(CLI_PROJECT) --framework netcoreapp3.1
 
 .PHONY: restore
 restore:
@@ -42,9 +42,11 @@ package-native:
 	dotnet publish $(CLI_PROJECT) -c $(CONFIGURATION) \
 		--output $(BUILD)/publish/$(RUNTIME) \
 		--runtime $(RUNTIME) \
+		 --framework netcoreapp3.1 \
 		/p:Mode=CoreRT-ReflectionFree
 
 	@mkdir -p $(ARTIFACTS)
+	@strip $(BUILD)/publish/$(RUNTIME)/$(CLI_TOOL)
 	@cp $(BUILD)/publish/$(RUNTIME)/$(CLI_TOOL) $(ARTIFACTS)/$(CLI_TOOL).$(RUNTIME)
 
 .PHONY: install

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Mono.Options;
 
@@ -39,7 +40,7 @@ namespace Nyancat
 
             var colors = new Dictionary<char, string>
             {
-                { ','  , string.Intern("\x1b[48;5;17m") },  /* Blue background */
+                { ','  , "\x1b[48;5;17m" },  /* Blue background */
                 { '.'  , "\x1b[48;5;231m" }, /* White stars */
                 { '\'' , "\x1b[48;5;16m" },  /* Black border */
                 { '@'  , "\x1b[48;5;230m" }, /* Tan poptart */
@@ -134,7 +135,7 @@ namespace Nyancat
             console.Write(RESET_CURSOR);
             console.Flush();
 
-
+            var defaultSleep = GetDefaultSleep();
             var elapsed = new Stopwatch();
             var watch = new Stopwatch();
             watch.Start();
@@ -222,7 +223,6 @@ namespace Nyancat
                     console.Flush();
 
                     lastPixel = char.MinValue;
-                    const int defaultSleep = 90;
                     var sleep = (defaultSleep * 2) - watch.Elapsed.Milliseconds;
                     Thread.Sleep(Math.Clamp(sleep, 0, defaultSleep));
                     watch.Restart();
@@ -237,6 +237,18 @@ namespace Nyancat
             _shutdownBlock.Set();
 
             return 0;
+        }
+
+        private static int GetDefaultSleep()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return 60;
+            }
+            else
+            {
+                return 90;
+            }
         }
 
         private static string GetVersion() => "v1.3.0";

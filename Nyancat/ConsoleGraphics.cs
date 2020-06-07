@@ -1,6 +1,7 @@
 using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Nyancat
 {
@@ -28,6 +29,9 @@ namespace Nyancat
                 newLine2 = newLine[1];
                 crlf = true;
             }
+
+            // This is only needed for windows
+            StoreInitialConsoleMode();
         }
 
         private char[] _buffer;
@@ -53,8 +57,10 @@ namespace Nyancat
             else
             {
                 throw new Exception("Unbuffered not implemented");
-                // _buffer = Array.Empty<char>();
             }
+
+            // Windows only
+            EnableVTMode();
         }
 
         private void Grow(int sizeHint)
@@ -135,6 +141,82 @@ namespace Nyancat
 
             _buffer = null;
             _index = 0;
+
+            // Windows only
+            RestoreConsoleMode();
         }
+
+        private static ConsoleOutputModeFlags InitialConsoleMode;
+        private static bool HasInitialConsoleMode;
+        private static bool HasUpdatedConsoleMode;
+
+        private static void StoreInitialConsoleMode()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
+
+            var stdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+            if (stdOutHandle == INVALID_HANDLE_VALUE) return;
+
+            if (GetConsoleMode(stdOutHandle, out InitialConsoleMode))
+            {
+                HasInitialConsoleMode = true;
+            }
+        }
+
+        private static void EnableVTMode()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
+            if (!HasInitialConsoleMode) return;
+            if (HasUpdatedConsoleMode) return;
+
+            if (!InitialConsoleMode.HasFlag(ConsoleOutputModeFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING))
+            {
+                var stdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+                if (stdOutHandle == INVALID_HANDLE_VALUE) return;
+
+                var vtConsoleMode = InitialConsoleMode |
+                    ConsoleOutputModeFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING |
+                    ConsoleOutputModeFlags.DISABLE_NEWLINE_AUTO_RETURN;
+
+                if (SetConsoleMode(stdOutHandle, vtConsoleMode))
+                {
+                    HasUpdatedConsoleMode = true;
+                }
+            }
+        }
+
+        private static void RestoreConsoleMode()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
+            if (!HasUpdatedConsoleMode) return;
+
+            var stdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+            if (stdOutHandle == INVALID_HANDLE_VALUE) return;
+
+            SetConsoleMode(stdOutHandle, InitialConsoleMode);
+        }
+
+
+        #region Win32ConsoleAPI
+        private static readonly int STD_OUTPUT_HANDLE = -11;
+        private static IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern IntPtr GetStdHandle(int nStdHandle);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool GetConsoleMode(IntPtr hConsoleHandle, out ConsoleOutputModeFlags lpMode);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool SetConsoleMode(IntPtr hConsoleHandle, ConsoleOutputModeFlags dwMode);
+
+        [Flags]
+        private enum ConsoleOutputModeFlags : uint
+        {
+            ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004,
+            DISABLE_NEWLINE_AUTO_RETURN = 0x0008,
+        }
+        #endregion
     }
 }

@@ -103,7 +103,7 @@ namespace Nyancat
             {
                 if (height != Console.WindowHeight || width != Console.WindowWidth)
                 {
-                    height = Console.LargestWindowHeight;
+                    height = Console.WindowHeight;
                     width = Console.WindowWidth;
 
                     CalculateRowsAndCols();
@@ -169,7 +169,7 @@ namespace Nyancat
                             {
                                 var start = row * NyancatFrames.FRAME_WIDTH + (row * 1);
 
-                                start = start + col;
+                                start += col;
 
                                 pixel = frame.Slice(start, 1)[0];
                             }
@@ -184,7 +184,6 @@ namespace Nyancat
                             {
                                 lastPixel = pixel;
                                 console.Write(colors[pixel]);
-
                                 console.Write(' ');
                                 console.Write(' ');
                             }
@@ -194,6 +193,8 @@ namespace Nyancat
                                 console.Write(' ');
                             }
                         }
+
+                        console.WriteLine();
                     }
 
                     if (showCounter == 1)
@@ -231,7 +232,27 @@ namespace Nyancat
 
         private static Dictionary<char, string> GetColors()
         {
-            if (ConsoleColorSupport.Level.HasFlag(ColorSupportLevel.Ansi256))
+            if (ConsoleColorSupport.Level.HasFlag(ColorSupportLevel.TrueColor))
+            {
+                return new Dictionary<char, string>
+                {
+                    { ','  , "\x1b[48;2;0;0;95m" },         /* Blue background */
+                    { '.'  , "\x1b[48;2;255;255;255m" },    /* White stars */
+                    { '\'' , "\x1b[48;2;0;0;0m" },          /* Black border */
+                    { '@'  , "\x1b[48;2;255;255;215m" },    /* Tan poptart */
+                    { '$'  , "\x1b[48;2;255;192;203m" },    /* Pink poptart */
+                    { '-'  , "\x1b[48;2;215;0;135m" },      /* Red poptart */
+                    { '>'  , "\x1b[48;2;255;0;0m" },        /* Red rainbow */
+                    { '&'  , "\x1b[48;2;255;165;0m" },      /* Orange rainbow */
+                    { '+'  , "\x1b[48;2;255;255;0m" },      /* Yellow Rainbow */
+                    { '#'  , "\x1b[48;2;135;255;0m" },      /* Green rainbow */
+                    { '='  , "\x1b[48;2;0;135;255m" },      /* Light blue rainbow */
+                    { ';'  , "\x1b[48;2;0;0;175m" },        /* Dark blue rainbow */
+                    { '*'  , "\x1b[48;2;88;88;88m" },       /* Gray cat face */
+                    { '%'  , "\x1b[48;2;215;135;175m" },    /* Pink cheeks */
+                };
+            }
+            else if (ConsoleColorSupport.Level.HasFlag(ColorSupportLevel.Ansi256))
             {
                 return new Dictionary<char, string>
                 {
@@ -249,6 +270,26 @@ namespace Nyancat
                     { ';'  , "\x1b[48;5;19m" },  /* Dark blue rainbow */
                     { '*'  , "\x1b[48;5;240m" }, /* Gray cat face */
                     { '%'  , "\x1b[48;5;175m" }, /* Pink cheeks */
+                };
+            }
+            else if (ConsoleColorSupport.Level.HasFlag(ColorSupportLevel.Basic))
+            {
+                return new Dictionary<char, string>
+                {
+                    { ',' , "\x1b[104m" }, /* Blue background */
+                    { '.' , "\x1b[107m" }, /* White stars */
+                    { '\'' , "\x1b[40m" }, /* Black border */
+                    { '@' , "\x1b[47m" },  /* Tan poptart */
+                    { '$' , "\x1b[105m" }, /* Pink poptart */
+                    { '-' , "\x1b[101m" }, /* Red poptart */
+                    { '>' , "\x1b[101m" }, /* Red rainbow */
+                    { '&' , "\x1b[43m" },  /* Orange rainbow */
+                    { '+' , "\x1b[103m" }, /* Yellow Rainbow */
+                    { '#' , "\x1b[102m" }, /* Green rainbow */
+                    { '=' , "\x1b[104m" }, /* Light blue rainbow */
+                    { ';' , "\x1b[44m" },  /* Dark blue rainbow */
+                    { '*' , "\x1b[100m" }, /* Gray cat face */
+                    { '%' , "\x1b[105m" }, /* Pink cheeks */
                 };
             }
             else
@@ -274,19 +315,19 @@ namespace Nyancat
         }
 
         private static int GetDefaultSleep()
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                return 60;
-            }
-            else
-            {
-                return 90;
-            }
-        }
+{
+    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+    {
+        return 60;
+    }
+    else
+    {
+        return 90;
+    }
+}
 
-        private static string GetVersion() => "v1.3.0";
+private static string GetVersion() => "v1.3.0";
 
-        private static string GetName() => "nyancat";
+private static string GetName() => "nyancat";
     }
 }

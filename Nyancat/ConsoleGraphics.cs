@@ -141,9 +141,13 @@ namespace Nyancat
 
         public void Flush()
         {
+            if (_index == 0) return;
+
             Console.Out.Write(_buffer, 0, _index - 1);
-            _index = 0;
+            Reset();
         }
+
+        private void Reset() => _index = 0;
 
         public ConsoleGraphics HideCursor()
         {

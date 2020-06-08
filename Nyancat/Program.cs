@@ -38,23 +38,7 @@ namespace Nyancat
                 { "?|h|help", "Show help information", _ => showHelp = true },
             };
 
-            var colors = new Dictionary<char, string>
-            {
-                { ','  , "\x1b[48;5;17m" },  /* Blue background */
-                { '.'  , "\x1b[48;5;231m" }, /* White stars */
-                { '\'' , "\x1b[48;5;16m" },  /* Black border */
-                { '@'  , "\x1b[48;5;230m" }, /* Tan poptart */
-                { '$'  , "\x1b[48;5;175m" }, /* Pink poptart */
-                { '-'  , "\x1b[48;5;162m" }, /* Red poptart */
-                { '>'  , "\x1b[48;5;196m" }, /* Red rainbow */
-                { '&'  , "\x1b[48;5;214m" }, /* Orange rainbow */
-                { '+'  , "\x1b[48;5;226m" }, /* Yellow Rainbow */
-                { '#'  , "\x1b[48;5;118m" }, /* Green rainbow */
-                { '='  , "\x1b[48;5;33m" },  /* Light blue rainbow */
-                { ';'  , "\x1b[48;5;19m" },  /* Dark blue rainbow */
-                { '*'  , "\x1b[48;5;240m" }, /* Gray cat face */
-                { '%'  , "\x1b[48;5;175m" }, /* Pink cheeks */
-            };
+            var colors = GetColors();
 
             try
             {
@@ -131,15 +115,17 @@ namespace Nyancat
 
             if (showTitle) console.Title = "Nyanyanyanyanyanyanya...";
 
-            console.Write(HIDE_CURSOR);
-            console.Write(RESET_CURSOR);
-            console.Flush();
+            console
+                .HideCursor()
+                .ResetCursor()
+                .Flush();
 
             var defaultSleep = GetDefaultSleep();
             var elapsed = new Stopwatch();
             var watch = new Stopwatch();
             watch.Start();
             elapsed.Start();
+
             while (running)
             {
                 for (var fc = 0; fc <= NyancatFrames.TOTAL_FRAMES; fc++)
@@ -148,7 +134,8 @@ namespace Nyancat
 
                     if (!running) break;
 
-                    console.Write(RESET_CURSOR);
+                    console.ResetCursor();
+
                     var frame = NyancatFrames.GetFrame(fc);
                     char lastPixel = char.MinValue;
 
@@ -187,7 +174,13 @@ namespace Nyancat
                                 pixel = frame.Slice(start, 1)[0];
                             }
 
-                            if (pixel != lastPixel && colors.ContainsKey(pixel))
+                            if (ConsoleColorSupport.Level == ColorSupportLevel.None)
+                            {
+                                lastPixel = pixel;
+                                console.Write(colors[pixel]);
+                                console.Write(colors[pixel]);
+                            }
+                            else if (pixel != lastPixel && colors.ContainsKey(pixel))
                             {
                                 lastPixel = pixel;
                                 console.Write(colors[pixel]);
@@ -201,25 +194,26 @@ namespace Nyancat
                                 console.Write(' ');
                             }
                         }
-                        console.WriteLine();
                     }
 
                     if (showCounter == 1)
                     {
                         var message = string.Concat("You have nyaned for ", (int)(elapsed.Elapsed.TotalSeconds), " seconds!");
-                        var spaces = (width - message.Length) / 2;
+                        var spacesLength = (width - message.Length) / 2;
+                        Span<char> spaces = stackalloc char[spacesLength];
 
-                        while (spaces > 0)
+                        for (var i = 0; i < spacesLength; i++)
                         {
-                            console.Write(' ');
-                            spaces--;
+                            spaces[i] = ConsoleColorSupport.Level == ColorSupportLevel.None ? ',' : ' ';
                         }
 
-                        console.Write("\x1b[1;37m");
+                        console.Write(spaces);
+                        console.ColorBrightWhite();
                         console.Write(message);
-                        console.Write("\x1b[J\x1b[0m");
+                        console.Write(spaces);
                     }
 
+                    console.WriteLine();
                     console.Flush();
 
                     lastPixel = char.MinValue;
@@ -229,14 +223,54 @@ namespace Nyancat
                 }
             }
 
-            console.Write($"{SHOW_CURSOR}{RESET_ALL_ATTRIBUTES}{RESET_CURSOR}{CLEAR_SCREEN}");
-            console.WriteLine();
-            console.Flush();
-
             console.Dispose();
             _shutdownBlock.Set();
 
             return 0;
+        }
+
+        private static Dictionary<char, string> GetColors()
+        {
+            if (ConsoleColorSupport.Level.HasFlag(ColorSupportLevel.Ansi256))
+            {
+                return new Dictionary<char, string>
+                {
+                    { ','  , "\x1b[48;5;17m" },  /* Blue background */
+                    { '.'  , "\x1b[48;5;231m" }, /* White stars */
+                    { '\'' , "\x1b[48;5;16m" },  /* Black border */
+                    { '@'  , "\x1b[48;5;230m" }, /* Tan poptart */
+                    { '$'  , "\x1b[48;5;175m" }, /* Pink poptart */
+                    { '-'  , "\x1b[48;5;162m" }, /* Red poptart */
+                    { '>'  , "\x1b[48;5;196m" }, /* Red rainbow */
+                    { '&'  , "\x1b[48;5;214m" }, /* Orange rainbow */
+                    { '+'  , "\x1b[48;5;226m" }, /* Yellow Rainbow */
+                    { '#'  , "\x1b[48;5;118m" }, /* Green rainbow */
+                    { '='  , "\x1b[48;5;33m" },  /* Light blue rainbow */
+                    { ';'  , "\x1b[48;5;19m" },  /* Dark blue rainbow */
+                    { '*'  , "\x1b[48;5;240m" }, /* Gray cat face */
+                    { '%'  , "\x1b[48;5;175m" }, /* Pink cheeks */
+                };
+            }
+            else
+            {
+                return new Dictionary<char, string>
+                {
+                    { ','  , "," }, /* Blue background */
+                    { '.'  , "." }, /* White stars */
+                    { '\'' , "'" }, /* Black border */
+                    { '@'  , "@" }, /* Tan poptart */
+                    { '$'  , "$" }, /* Pink poptart */
+                    { '-'  , "-" }, /* Red poptart */
+                    { '>'  , ">" }, /* Red rainbow */
+                    { '&'  , "&" }, /* Orange rainbow */
+                    { '+'  , "+" }, /* Yellow Rainbow */
+                    { '#'  , "#" }, /* Green rainbow */
+                    { '='  , "=" }, /* Light blue rainbow */
+                    { ';'  , ";" }, /* Dark blue rainbow */
+                    { '*'  , "*" }, /* Gray cat face */
+                    { '%'  , "%" }, /* Pink cheeks */
+                };
+            }
         }
 
         private static int GetDefaultSleep()

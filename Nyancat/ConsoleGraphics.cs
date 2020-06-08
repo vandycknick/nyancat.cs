@@ -3,11 +3,19 @@ using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+using static Nyancat.Win32Api;
+
 namespace Nyancat
 {
     public struct ConsoleGraphics : IDisposable
     {
         private const int DEFAULT_BUFFER_SIZE = 32768; // use 32K default buffer.
+
+        private const string HIDE_CURSOR = "\x1b[?25l";
+        private const string RESET_CURSOR = "\x1b[H";
+        private const string SHOW_CURSOR = "\x1b[?25h";
+        private const string CLEAR_SCREEN = "\x1b[2J";
+        private const string RESET_ALL_ATTRIBUTES = "\x1b[0m";
 
         private static char newLine1;
         private static char newLine2;
@@ -79,7 +87,6 @@ namespace Nyancat
             _buffer = newBuffer;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Write(char value)
         {
             if (_buffer.Length - _index < 1)
@@ -90,7 +97,20 @@ namespace Nyancat
             _buffer[_index++] = value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Write(ReadOnlySpan<char> value)
+        {
+            if (_buffer.Length - _index < value.Length)
+            {
+                Grow(value.Length);
+            }
+
+            var buffer = _buffer.AsSpan(_index, value.Length);
+            if (value.TryCopyTo(buffer))
+            {
+                _index += value.Length;
+            }
+        }
+
         public void Write(string value)
         {
             if (_buffer.Length - _index < value.Length)
@@ -102,7 +122,6 @@ namespace Nyancat
             _index += value.Length;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteLine()
         {
             if (crlf)
@@ -123,27 +142,64 @@ namespace Nyancat
         public void Flush()
         {
             Console.Out.Write(_buffer, 0, _index - 1);
-            Reset();
-        }
-
-        private void Reset()
-        {
             _index = 0;
         }
 
+        public ConsoleGraphics HideCursor()
+        {
+            if (SupportsAnsi()) Write(HIDE_CURSOR);
+            return this;
+        }
+
+        public ConsoleGraphics ResetCursor()
+        {
+            if (SupportsAnsi())
+            {
+                Write(RESET_CURSOR);
+            }
+            else
+            {
+                Console.CursorTop = 0;
+                Console.CursorLeft = 0;
+            }
+            return this;
+        }
+
+        public ConsoleGraphics ColorBrightWhite()
+        {
+            if (SupportsAnsi()) Write("\x1b[1;37m");
+            return this;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private Boolean SupportsAnsi() => ConsoleColorSupport.Level != ColorSupportLevel.None;
+
         public void Dispose()
         {
+            // Windows only
+            RestoreConsoleMode();
+
+            // Restore Console
+            if (ConsoleColorSupport.Level == ColorSupportLevel.None)
+            {
+                Console.Clear();
+            }
+            else
+            {
+                Write($"{SHOW_CURSOR}{RESET_ALL_ATTRIBUTES}{RESET_CURSOR}{CLEAR_SCREEN}");
+                WriteLine();
+                Flush();
+            }
+
+            // Return buffer
             if (_buffer != null)
             {
                 ArrayPool<char>.Shared.Return(_buffer);
             }
-
+            
+            // Reset
             _buffer = null;
             _index = 0;
-
-            // Windows only
-            RestoreConsoleMode();
         }
 
         private static ConsoleOutputModeFlags InitialConsoleMode;
@@ -196,30 +252,5 @@ namespace Nyancat
 
             SetConsoleMode(stdOutHandle, InitialConsoleMode);
         }
-
-
-        #region Win32ConsoleAPI
-        private static readonly int STD_OUTPUT_HANDLE = -11;
-        private static IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr GetStdHandle(int nStdHandle);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool GetConsoleMode(IntPtr hConsoleHandle, out ConsoleOutputModeFlags lpMode);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool SetConsoleMode(IntPtr hConsoleHandle, ConsoleOutputModeFlags dwMode);
-
-        [Flags]
-        private enum ConsoleOutputModeFlags : uint
-        {
-            ENABLE_PROCESSED_OUTPUT = 0x0001,
-            ENABLE_WRAP_AT_EOL_OUTPUT = 0x0002,
-            ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004,
-            DISABLE_NEWLINE_AUTO_RETURN = 0x0008,
-            ENABLE_LVB_GRID_WORLDWIDE = 0x0010
-        }
-        #endregion
     }
 }

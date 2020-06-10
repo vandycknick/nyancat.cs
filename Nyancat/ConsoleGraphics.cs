@@ -53,6 +53,10 @@ namespace Nyancat
             set => Console.Title = value;
         }
 
+        public int Width => Console.WindowWidth;
+
+        public int Height => Console.WindowHeight;
+
         public ConsoleGraphics(bool buffered = true)
         {
             _buffered = buffered;

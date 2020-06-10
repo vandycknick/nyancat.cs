@@ -1,4 +1,4 @@
-.DEFAULT_GOAL := default
+.DEFAULT_GOAL 	:= default
 
 ARTIFACTS 		:= $(shell pwd)/artifacts
 BUILD			:= $(shell pwd)/.build

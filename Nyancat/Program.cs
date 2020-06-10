@@ -79,13 +79,23 @@ namespace Nyancat
                 var renderTime = startTime;
 
                 if (showIntro) Console.WriteLine("TODO: implement show intro");
-                var scene = new NyancatScene(frames: frames, showCounter: showCounter);
+                var scene = showIntro ? new IntroScene() : (IScene)new NyancatScene(frames: frames, showCounter: showCounter);
 
                 while (running)
                 {
+                    console.ResetCursor();
+
                     if (!scene.Update(console.Width, console.Height))
                     {
-                        running = false;
+                        if (showIntro)
+                        {
+                            scene = new NyancatScene(frames: frames, showCounter: showCounter);
+                        }
+                        else
+                        {
+
+                            running = false;
+                        }
                     }
 
                     scene.Render(ref console);

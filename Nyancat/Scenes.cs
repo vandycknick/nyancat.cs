@@ -81,8 +81,6 @@ namespace Nyancat
             var frame = NyancatFrames.GetFrame(_fc);
             var lastPixel = char.MinValue;
 
-            console.ResetCursor();
-
             for (var row = _minRow; row < _maxRow; ++row)
             {
                 for (var col = _minCol; col < _maxCol; ++col)
@@ -250,6 +248,91 @@ namespace Nyancat
             }
         }
 
+    }
+
+    public struct IntroScene : IScene
+    {
+        private const int TIME_TO_SHOW = 5;
+        private bool _initialized;
+        private long _startedAt;
+        private long _totalTimeInSeconds;
+        private int _width;
+        private int _height;
+
+        public bool Update(int width, int height)
+        {
+            if (_initialized == false)
+            {
+                _initialized = true;
+                _startedAt = Environment.TickCount64;
+            }
+
+            _width = width;
+            _height = height;
+
+            _totalTimeInSeconds = (Environment.TickCount64 - _startedAt) / 1000;
+            return (TIME_TO_SHOW - _totalTimeInSeconds) > 0;
+        }
+
+        public void Render(ref ConsoleGraphics console)
+        {
+            WriteBlankLine(ref console);
+            WriteBlankLine(ref console);
+            WriteBlankLine(ref console);
+            WriteBlankLine(ref console);
+
+            WriteLineCentered("Nyancat Dotnet Core", ref console);
+            WriteLineCentered("written by Nick Van Dyck @vandycknick", ref console);
+            WriteBlankLine(ref console);
+            WriteLineCentered("Found any issues?", ref console);
+            WriteLineCentered("Please report here: https://github.com/nickvdyck/nyancat.cs/issues", ref console);
+
+            var timeLeft = string.Concat("Starting in ", TIME_TO_SHOW - _totalTimeInSeconds, "...");
+            WriteLineCentered(timeLeft, ref console);
+
+            for (var i = 10; i < _height; i++)
+            {
+                WriteBlankLine(ref console);
+            }
+
+            console.Flush();
+        }
+
+        public void WriteBlankLine(ref ConsoleGraphics console) => console.WriteLine("\x1b[48;5;16m\x1b[J\x1b[0m");
+
+        public void WriteLineCentered(string message, ref ConsoleGraphics console)
+        {
+            console.Write("\x1b[48;5;16m\x1b[38;5;15m");
+            WriteCentered(message, ref console);
+            console.Write("\x1b[J\x1b[0m");
+            console.WriteLine();
+        }
+
+        public void WriteCentered(string message, ref ConsoleGraphics console)
+        {
+            var spacesLength = (_width - message.Length) / 2;
+            Span<char> buffer = stackalloc char[spacesLength + message.Length];
+
+            if (message.Length < _width)
+            {
+                var i = 0;
+                for (; i < spacesLength; i++)
+                {
+                    buffer[i] = ' ';
+                }
+
+                foreach (var ch in message)
+                {
+                    buffer[i++] = ch;
+                }
+
+                console.Write(buffer.Slice(0, i));
+            }
+            else
+            {
+                WriteBlankLine(ref console);
+            }
+        }
     }
 
     interface IScene

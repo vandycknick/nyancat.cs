@@ -126,6 +126,12 @@ namespace Nyancat
             _index += value.Length;
         }
 
+        public void WriteLine(string value)
+        {
+            Write(value);
+            WriteLine();
+        }
+
         public void WriteLine()
         {
             if (crlf)

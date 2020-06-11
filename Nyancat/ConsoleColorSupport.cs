@@ -34,7 +34,7 @@ namespace Nyancat
 
                         if (!GetConsoleMode(stdOutHandle, out var consoleMode)) return;
 
-                        if (!consoleMode.HasFlag(ConsoleOutputModeFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING)) return;
+                        if (!consoleMode.HasFlag(ConsoleBufferModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING)) return;
 
                         Level |= ColorSupportLevel.Basic;
 

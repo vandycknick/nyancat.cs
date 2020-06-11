@@ -136,6 +136,7 @@ namespace Nyancat
                     }
                 }
 
+                console.Write("\x1b[K");
                 console.WriteLine();
             }
 
@@ -147,17 +148,14 @@ namespace Nyancat
 
                 if (spacesLength > 0)
                 {
-                    Span<char> spaces = stackalloc char[spacesLength];
-
                     for (var i = 0; i < spacesLength; i++)
                     {
-                        spaces[i] = ConsoleColorSupport.Level == ColorSupportLevel.None ? ',' : ' ';
+                        console.Write(ConsoleColorSupport.Level == ColorSupportLevel.None ? ',' : ' ');
                     }
 
-                    console.Write(spaces);
                     console.ColorBrightWhite();
                     console.Write(message);
-                    console.Write(spaces);
+                    console.Write("\x1b[J\x1b[0m");
                 }
             }
 
@@ -298,35 +296,25 @@ namespace Nyancat
             console.Flush();
         }
 
-        public void WriteBlankLine(ref ConsoleGraphics console) => console.WriteLine("\x1b[48;5;16m\x1b[J\x1b[0m");
+        public void WriteBlankLine(ref ConsoleGraphics console) => console.WriteLine("\x1b[48;5;16m\x1b[K");
 
         public void WriteLineCentered(string message, ref ConsoleGraphics console)
         {
             console.Write("\x1b[48;5;16m\x1b[38;5;15m");
             WriteCentered(message, ref console);
-            console.Write("\x1b[J\x1b[0m");
+            console.Write("\x1b[48;5;16m\x1b[K");
             console.WriteLine();
         }
 
         public void WriteCentered(string message, ref ConsoleGraphics console)
         {
             var spacesLength = (_width - message.Length) / 2;
-            Span<char> buffer = stackalloc char[spacesLength + message.Length];
 
             if (message.Length < _width)
             {
-                var i = 0;
-                for (; i < spacesLength; i++)
-                {
-                    buffer[i] = ' ';
-                }
+                for (var i = 0; i < spacesLength; i++) console.Write(' ');
 
-                foreach (var ch in message)
-                {
-                    buffer[i++] = ch;
-                }
-
-                console.Write(buffer.Slice(0, i));
+                foreach (var ch in message) console.Write(ch);
             }
             else
             {

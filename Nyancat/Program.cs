@@ -78,7 +78,6 @@ namespace Nyancat
                 var startTime = Environment.TickCount64;
                 var renderTime = startTime;
 
-                if (showIntro) Console.WriteLine("TODO: implement show intro");
                 var scene = showIntro ? new IntroScene() : (IScene)new NyancatScene(frames: frames, showCounter: showCounter);
 
                 while (running)
@@ -90,6 +89,7 @@ namespace Nyancat
                         if (showIntro)
                         {
                             scene = new NyancatScene(frames: frames, showCounter: showCounter);
+                            scene.Update(console.Width, console.Height);
                         }
                         else
                         {

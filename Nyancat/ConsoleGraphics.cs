@@ -216,7 +216,7 @@ namespace Nyancat
             _index = 0;
         }
 
-        private static ConsoleOutputModeFlags InitialConsoleMode;
+        private static ConsoleBufferModes InitialConsoleMode;
         private static bool HasInitialConsoleMode;
         private static bool HasUpdatedConsoleMode;
 
@@ -240,14 +240,14 @@ namespace Nyancat
             if (!HasInitialConsoleMode) return;
             if (HasUpdatedConsoleMode) return;
 
-            if (!InitialConsoleMode.HasFlag(ConsoleOutputModeFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING))
+            if (!InitialConsoleMode.HasFlag(ConsoleBufferModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING))
             {
                 var stdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
                 if (stdOutHandle == INVALID_HANDLE_VALUE) return;
 
                 var vtConsoleMode = InitialConsoleMode |
-                    ConsoleOutputModeFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING |
-                    ConsoleOutputModeFlags.DISABLE_NEWLINE_AUTO_RETURN;
+                    ConsoleBufferModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING |
+                    ConsoleBufferModes.DISABLE_NEWLINE_AUTO_RETURN;
 
                 if (SetConsoleMode(stdOutHandle, vtConsoleMode))
                 {

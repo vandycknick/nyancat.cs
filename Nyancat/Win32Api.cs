@@ -12,13 +12,13 @@ namespace Nyancat
         public static extern IntPtr GetStdHandle(int nStdHandle);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool GetConsoleMode(IntPtr hConsoleHandle, out ConsoleOutputModeFlags lpMode);
+        public static extern bool GetConsoleMode(IntPtr hConsoleHandle, out ConsoleBufferModes lpMode);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool SetConsoleMode(IntPtr hConsoleHandle, ConsoleOutputModeFlags dwMode);
+        public static extern bool SetConsoleMode(IntPtr hConsoleHandle, ConsoleBufferModes dwMode);
 
         [Flags]
-        public enum ConsoleOutputModeFlags : uint
+        public enum ConsoleBufferModes : uint
         {
             ENABLE_PROCESSED_OUTPUT = 0x0001,
             ENABLE_WRAP_AT_EOL_OUTPUT = 0x0002,

@@ -10,37 +10,22 @@ namespace Nyancat
 
         public const int TOTAL_FRAMES = 11;
 
-        public static ReadOnlySpan<char> GetFrame(int id)
-        {
-            switch (id)
+        public static ReadOnlySpan<char> GetFrame(int id) =>
+            id switch
             {
-                case 0:
-                default:
-                    return Frame0;
-                case 1:
-                    return Frame1;
-                case 2:
-                    return Frame2;
-                case 3:
-                    return Frame3;
-                case 4:
-                    return Frame4;
-                case 5:
-                    return Frame5;
-                case 6:
-                    return Frame6;
-                case 7:
-                    return Frame7;
-                case 8:
-                    return Frame8;
-                case 9:
-                    return Frame9;
-                case 10:
-                    return Frame10;
-                case 11:
-                    return Frame11;
-            }
-        }
+                1 => Frame1,
+                2 => Frame2,
+                3 => Frame3,
+                4 => Frame4,
+                5 => Frame5,
+                6 => Frame6,
+                7 => Frame7,
+                8 => Frame8,
+                9 => Frame9,
+                10 => Frame10,
+                11 => Frame11,
+                _ => Frame0,
+            };
 
         #region Frames
 

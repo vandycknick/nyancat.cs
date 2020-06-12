@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Mono.Options;
 
 namespace Nyancat
 {
@@ -12,35 +10,18 @@ namespace Nyancat
         private static readonly ManualResetEvent _shutdownBlock = new ManualResetEvent(false);
         public static int Main(string[] args)
         {
-            var running = true;
-            var showIntro = false;
-            var showHelp = false;
-            var showVersion = false;
-            var showCounter = 1;
-            var showTitle = true;
-            var frames = int.MaxValue;
-
-            var options = new OptionSet
-            {
-                { "i|intro", "Show the introduction / about information at startup", _ => showIntro = true },
-                { "n|no-counter", "Do not display the timer", _ => showCounter = 0 },
-                { "t|no-title", "Do not set the titlebar text", _ => showTitle = false },
-                { "f|frames=", "Display the requested number of frames, then quit", (int f) => frames = f },
-                { "v|version", "Show version information", _ => showVersion = true },
-                { "?|h|help", "Show help information", _ => showHelp = true },
-            };
-
             try
             {
-                var extra = options.Parse(args);
+                var running = true;
+                var options = Options.Parse(args);
 
-                if (showVersion)
+                if (options.ShowVersion)
                 {
                     Console.WriteLine(GetVersion());
                     return 0;
                 }
 
-                if (showHelp)
+                if (options.ShowHelp)
                 {
                     Console.WriteLine($"{GetName()}: {GetVersion()}");
                     Console.WriteLine("  Terminal nyancat runner");
@@ -49,7 +30,13 @@ namespace Nyancat
                     Console.WriteLine($"  {GetName()} [options]");
                     Console.WriteLine();
                     Console.WriteLine("Options:");
-                    options.WriteOptionDescriptions(Console.Out);
+                    Console.WriteLine("  -i, --intro                Show the introduction / about information at startup.");
+                    Console.WriteLine("  -n, --no-counter           Do not display the timer.");
+                    Console.WriteLine("  -t, --no-title             Do not set the titlebar text.");
+                    Console.WriteLine("  -f, --frames=VALUE         Display the requested number of frames, then quit.");
+                    Console.WriteLine("  -v, --version              Show version information.");
+                    Console.WriteLine("  -?, -h, --help             Show help information");
+
                     return 0;
                 }
 
@@ -67,7 +54,7 @@ namespace Nyancat
 
                 var console = new ConsoleGraphics(buffered: true);
 
-                if (showTitle) console.Title = "Nyanyanyanyanyanyanya...";
+                if (options.ShowTitle) console.Title = "Nyanyanyanyanyanyanya...";
 
                 console
                     .HideCursor()
@@ -78,7 +65,8 @@ namespace Nyancat
                 var startTime = Environment.TickCount64;
                 var renderTime = startTime;
 
-                var scene = showIntro ? new IntroScene() : (IScene)new NyancatScene(frames: frames, showCounter: showCounter);
+                var showIntro = options.ShowIntro;
+                var scene = showIntro ? new IntroScene() : (IScene)new NyancatScene(frames: options.Frames, showCounter: options.ShowCounter);
 
                 while (running)
                 {
@@ -88,8 +76,9 @@ namespace Nyancat
                     {
                         if (showIntro)
                         {
-                            scene = new NyancatScene(frames: frames, showCounter: showCounter);
+                            scene = new NyancatScene(frames: options.Frames, showCounter: options.ShowCounter);
                             scene.Update(console.Width, console.Height);
+                            showIntro = false;
                         }
                         else
                         {
@@ -113,27 +102,16 @@ namespace Nyancat
 
                 return 0;
             }
-            catch (OptionException e)
+            catch (Exception e)
             {
-                Console.WriteLine($"{GetName()}: {GetVersion()}");
                 Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
+                Console.WriteLine();
                 Console.WriteLine("Try `nyancat --help' for more information.");
                 return 1;
             }
         }
 
-        private static long GetDefaultSleep()
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                return 60;
-            }
-            else
-            {
-                return 90;
-            }
-        }
+        private static long GetDefaultSleep() => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? 60 : 90;
 
         private static string GetVersion() => "v1.3.0";
 

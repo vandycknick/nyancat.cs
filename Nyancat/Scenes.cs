@@ -155,11 +155,9 @@ namespace Nyancat
 
                     console.ColorBrightWhite();
                     console.Write(message);
-                    console.Write("\x1b[J\x1b[0m");
+                    console.WriteLine("\x1b[J\x1b[0m");
                 }
             }
-
-            console.WriteLine();
         }
 
         private static Dictionary<char, string> GetColors()

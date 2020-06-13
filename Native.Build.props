@@ -1,0 +1,27 @@
+<Project>
+
+  <ItemGroup Condition="'$(Mode)' != ''">
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="1.0.0-alpha-*" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Mode)' == 'CoreRT-Moderate' or '$(Mode)' == 'CoreRT-High' or '$(Mode)' == 'CoreRT-ReflectionFree'">
+    <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+    <IlcOptimizationPreference>Size</IlcOptimizationPreference>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Mode)' == 'CoreRT-High' or '$(Mode)' == 'CoreRT-ReflectionFree'">
+    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+    <IlcInvariantGlobalization>true</IlcInvariantGlobalization>
+    <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Mode)' == 'CoreRT-High'">
+    <IlcArg Include="--removefeature:EventSource" />
+    <IlcArg Include="--removefeature:FrameworkStrings" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Mode)' == 'CoreRT-ReflectionFree'">
+    <IlcDisableReflection>true</IlcDisableReflection>
+  </PropertyGroup>
+
+</Project>

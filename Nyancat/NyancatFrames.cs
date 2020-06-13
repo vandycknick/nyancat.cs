@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Nyancat
 {
     public static class NyancatFrames
@@ -10,7 +7,7 @@ namespace Nyancat
 
         public const int TOTAL_FRAMES = 11;
 
-        public static ReadOnlySpan<char> GetFrame(int id) =>
+        public static string GetFrame(int id) =>
             id switch
             {
                 1 => Frame1,
@@ -821,12 +818,6 @@ namespace Nyancat
 ";
 
         #endregion
-
-        // TODO: Remove this when all references are gone
-        public static readonly IReadOnlyCollection<string[]> Frames = new List<string[]>
-        {
-
-        };
     }
 
 }

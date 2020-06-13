@@ -78,7 +78,7 @@ namespace Nyancat
 
         public void Render(ref ConsoleGraphics console)
         {
-            var frame = NyancatFrames.GetFrame(_fc);
+            ReadOnlySpan<char> frame = NyancatFrames.GetFrame(_fc);
             var lastPixel = char.MinValue;
 
             for (var row = _minRow; row < _maxRow; ++row)

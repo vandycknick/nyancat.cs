@@ -33,7 +33,7 @@ jobs:
       run: make package
 
     - name: Install dependencies
-      run: apt-get install -y llvm cmake clang libicu-dev uuid-dev libcurl4-openssl-dev zlib1g-dev libkrb5-dev libtinfo5
+      run: sudo apt-get install -y llvm cmake clang libicu-dev uuid-dev libcurl4-openssl-dev zlib1g-dev libkrb5-dev libtinfo5
 
     - name: Build native linux
       run: make package-native RUNTIME=linux-x64

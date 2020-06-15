@@ -32,8 +32,11 @@ jobs:
     - name: Package app
       run: make package
 
-    # - name: Build native linux
-    #   run: make package-native RUNTIME=linux-x64
+    - name: Install dependencies
+      run: apt-get install -y llvm cmake clang libicu-dev uuid-dev libcurl4-openssl-dev zlib1g-dev libkrb5-dev libtinfo5
+
+    - name: Build native linux
+      run: make package-native RUNTIME=linux-x64
 
     - name: Get the version
       id: get_version

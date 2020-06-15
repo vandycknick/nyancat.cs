@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -113,7 +114,17 @@ namespace Nyancat
 
         private static long GetDefaultSleep() => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? 60 : 90;
 
-        private static string GetVersion() => "v1.3.0";
+        private static string GetVersion()
+        {
+            try
+            {
+                return typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+            }
+            catch
+            {
+                return "v1.3.0";
+            }
+        }
 
         private static string GetName() => "nyancat";
     }

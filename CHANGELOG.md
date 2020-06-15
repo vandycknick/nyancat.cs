@@ -4,12 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [v1.3.0]
+## [v1.3.0] - 2020-06-15
 ### Added
 - Package as native single file executable
 
 ### Changed
-- Switch to using system.commandline package
+- Switch to custom light weight command line parser
+- Reimplement renderer and use less memory
 
 
 ## [v1.2.0] - 2020-01-22

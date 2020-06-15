@@ -36,7 +36,7 @@ jobs:
       run: sudo apt-get install -y llvm cmake clang libicu-dev uuid-dev libcurl4-openssl-dev zlib1g-dev libkrb5-dev libtinfo5
 
     - name: Build native linux
-      run: make package-native RUNTIME=linux-x64
+      run: make package-native RUNTIME=linux-x64 checksum
 
     - name: Get the version
       id: get_version

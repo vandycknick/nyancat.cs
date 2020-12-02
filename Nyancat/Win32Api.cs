@@ -26,5 +26,18 @@ namespace Nyancat
             DISABLE_NEWLINE_AUTO_RETURN = 0x0008,
             ENABLE_LVB_GRID_WORLDWIDE = 0x0010
         }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool GetConsoleCursorInfo(IntPtr hConsoleOutput, out CONSOLE_CURSOR_INFO lpConsoleCursorInfo);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleCursorInfo(IntPtr hConsoleOutput, [In] ref CONSOLE_CURSOR_INFO lpConsoleCursorInfo);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CONSOLE_CURSOR_INFO
+        {
+            uint Size;
+            bool Visible;
+        }
     }
 }

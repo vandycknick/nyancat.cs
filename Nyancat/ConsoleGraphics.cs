@@ -50,7 +50,6 @@ namespace Nyancat
 
         public string Title
         {
-            get => Console.Title;
             set => Console.Title = value;
         }
 
@@ -212,7 +211,7 @@ namespace Nyancat
             {
                 ArrayPool<char>.Shared.Return(_buffer);
             }
-            
+
             // Reset
             _buffer = null;
             _index = 0;

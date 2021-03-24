@@ -18,7 +18,7 @@ clean:
 
 .PHONY: run
 run:
-	dotnet run --project $(CLI_PROJECT) --framework netcoreapp3.1
+	dotnet run --project $(CLI_PROJECT) --framework net5.0
 
 .PHONY: restore
 restore:

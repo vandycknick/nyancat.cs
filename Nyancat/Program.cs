@@ -34,7 +34,7 @@ namespace Nyancat
                     Console.WriteLine("  -i, --intro                Show the introduction / about information at startup.");
                     Console.WriteLine("  -n, --no-counter           Do not display the timer.");
                     Console.WriteLine("  -t, --no-title             Do not set the titlebar text.");
-                    Console.WriteLine("  -f, --frames=VALUE         Display the requested number of frames, then quit.");
+                    Console.WriteLine("  -f, --frames VALUE         Display the requested number of frames, then quit.");
                     Console.WriteLine("  -v, --version              Show version information.");
                     Console.WriteLine("  -?, -h, --help             Show help information");
 
@@ -122,7 +122,7 @@ namespace Nyancat
             }
             catch
             {
-                return "v1.3.0";
+                return "v1.5.0";
             }
         }
 

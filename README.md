@@ -39,7 +39,7 @@ Options
   -i, --intro                Show the introduction / about information at startup
   -n, --no-counter           Do not display the timer
   -t, --no-title             Do not set the titlebar text
-  -f, --frames=VALUE         Display the requested number of frames, then quit
+  -f, --frames VALUE         Display the requested number of frames, then quit
   -?, -h, --help             Show help information
   -v, --version              Show version information
 ```
@@ -55,9 +55,7 @@ make install
 
 [ci-url]: https://github.com/nickvdyck/nyancat.cs
 [ci-badge]: https://github.com/nickvdyck/nyancat.cs/workflows/CI/badge.svg
-
 [nuget-package-url]: https://www.nuget.org/packages/nyancat/
 [nuget-package-badge]: https://img.shields.io/nuget/v/nyancat.svg?style=flat-square&label=nuget
-
 [feedz-package-url]: https://f.feedz.io/nvd/nyancat-cs/packages/nyancat/latest/download
 [feedz-package-badge]: https://img.shields.io/badge/endpoint.svg?url=https%3A%2F%2Ff.feedz.io%2Fnvd%2Fnyancat-cs%2Fshield%2Fnyancat%2Flatest&label=nyancat

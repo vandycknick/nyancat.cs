@@ -3,54 +3,54 @@ name: Release Workflow
 on:
   push:
     tags:
-    - 'v*'
+      - "v*"
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Setup Go
-      uses: actions/setup-go@v1
-      with:
-        go-version: 1.x
+      - name: Setup Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.x
 
-    - name: Setup Go Environment
-      run: |
-        echo "::set-env name=GOPATH::$(go env GOPATH)"
-        echo "::add-path::$(go env GOPATH)/bin"
-      shell: bash
+      - name: Setup Go Environment
+        run: |
+          echo "::set-env name=GOPATH::$(go env GOPATH)"
+          echo "::add-path::$(go env GOPATH)/bin"
+        shell: bash
 
-    - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '3.1.301'
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "5.0.201"
 
-    - name: Checkout code
-      uses: actions/checkout@v1
+      - name: Checkout code
+        uses: actions/checkout@v1
 
-    - name: Package app
-      run: make package
+      - name: Package app
+        run: make package
 
-    - name: Install dependencies
-      run: sudo apt-get install -y llvm cmake clang libicu-dev uuid-dev libcurl4-openssl-dev zlib1g-dev libkrb5-dev libtinfo5
+      - name: Install dependencies
+        run: sudo apt-get install -y llvm cmake clang libicu-dev uuid-dev libcurl4-openssl-dev zlib1g-dev libkrb5-dev libtinfo5
 
-    - name: Build native linux
-      run: make package-native RUNTIME=linux-x64 checksum
+      - name: Build native linux
+        run: make package-native RUNTIME=linux-x64 checksum
 
-    - name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-    - name: Create Release
-      shell: bash
-      run: |
-        go env
-        go get -u github.com/tcnksm/ghr
-        ghr -t ${{ secrets.GITHUB_TOKEN }} -b 'Nyancat release. Look at the changelog for more info' ${{ steps.get_version.outputs.VERSION }} ./artifacts/
+      - name: Create Release
+        shell: bash
+        run: |
+          go env
+          go get -u github.com/tcnksm/ghr
+          ghr -t ${{ secrets.GITHUB_TOKEN }} -b 'Nyancat release. Look at the changelog for more info' ${{ steps.get_version.outputs.VERSION }} ./artifacts/
 
-    - name: Push to feedz.io
-      run: dotnet nuget push artifacts/**/*.nupkg --api-key ${{ secrets.FEEDZ_IO_TOKEN }} --source https://f.feedz.io/nvd/nyancat-cs/nuget/index.json --skip-duplicate
+      - name: Push to feedz.io
+        run: dotnet nuget push artifacts/**/*.nupkg --api-key ${{ secrets.FEEDZ_IO_TOKEN }} --source https://f.feedz.io/nvd/nyancat-cs/nuget/index.json --skip-duplicate
 
-    - name: Push to nuget
-      run: dotnet nuget push artifacts/**/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      - name: Push to nuget
+        run: dotnet nuget push artifacts/**/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json --skip-duplicate

@@ -28,7 +28,7 @@ When everything is installed just type `nyancat` in your favourite terminal and 
 ## Usage
 
 ```sh
-nyancat: 1.2.0
+nyancat: 1.5.0
 
 Terminal nyancat runner
 

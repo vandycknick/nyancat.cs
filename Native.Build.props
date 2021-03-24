@@ -1,7 +1,7 @@
 <Project>
 
   <ItemGroup Condition="'$(Mode)' != ''">
-    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="1.0.0-alpha-*" />
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="6.0.0-*" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Mode)' == 'CoreRT-Moderate' or '$(Mode)' == 'CoreRT-High' or '$(Mode)' == 'CoreRT-ReflectionFree'">

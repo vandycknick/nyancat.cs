@@ -39,10 +39,11 @@ package:
 
 .PHONY: package-native
 package-native:
+	# Prereqs: https://github.com/dotnet/runtimelab/blob/feature/NativeAOT/samples/prerequisites.md#ubuntu-1604
 	dotnet publish $(CLI_PROJECT) -c $(CONFIGURATION) \
 		--output $(BUILD)/publish/$(RUNTIME) \
 		--runtime $(RUNTIME) \
-		 --framework netcoreapp3.1 \
+		 --framework net5.0 \
 		/p:Mode=CoreRT-ReflectionFree
 
 	@mkdir -p $(ARTIFACTS)

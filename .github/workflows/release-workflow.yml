@@ -11,15 +11,9 @@ jobs:
 
     steps:
       - name: Setup Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: 1.x
-
-      - name: Setup Go Environment
-        run: |
-          echo "::set-env name=GOPATH::$(go env GOPATH)"
-          echo "::add-path::$(go env GOPATH)/bin"
-        shell: bash
 
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v1

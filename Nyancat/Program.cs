@@ -7,7 +7,6 @@ namespace Nyancat
 {
     public class Program
     {
-        private const string RAINBOW_TAIL = ",,>>&&&+++###==;;;,,";
         private static readonly ManualResetEvent _shutdownBlock = new ManualResetEvent(false);
         public static int Main(string[] args)
         {
@@ -53,14 +52,16 @@ namespace Nyancat
                     running = false;
                 };
 
-                var console = new ConsoleGraphics(buffered: true);
+                var ansi = AnsiConsole.Create();
 
-                if (options.ShowTitle) console.Title = "Nyanyanyanyanyanyanya...";
+                if (options.ShowTitle) ansi.Console.SetTitle("Nyanyanyanyanyanyanya...");
 
-                console
+                ansi
                     .HideCursor()
                     .ResetCursor()
                     .Flush();
+
+                ansi.WriteLine("hello").Flush();
 
                 var defaultSleep = GetDefaultSleep();
                 var startTime = Environment.TickCount64;
@@ -71,14 +72,14 @@ namespace Nyancat
 
                 while (running)
                 {
-                    console.ResetCursor();
+                    ansi.ResetCursor();
 
-                    if (!scene.Update(console.Width, console.Height))
+                    if (!scene.Update(ansi.Console.Width, ansi.Console.Height))
                     {
                         if (showIntro)
                         {
                             scene = new NyancatScene(frames: options.Frames, showCounter: options.ShowCounter);
-                            scene.Update(console.Width, console.Height);
+                            scene.Update(ansi.Console.Width, ansi.Console.Height);
                             showIntro = false;
                         }
                         else
@@ -88,9 +89,9 @@ namespace Nyancat
                         }
                     }
 
-                    scene.Render(ref console);
+                    scene.Render(ref ansi);
 
-                    console.Flush();
+                    ansi.Flush();
 
                     var elapsed = Environment.TickCount64 - renderTime;
                     var sleep = (defaultSleep * 2) - elapsed;
@@ -98,13 +99,14 @@ namespace Nyancat
                     renderTime = Environment.TickCount64;
                 }
 
-                console.Dispose();
+                ansi.Dispose();
                 _shutdownBlock.Set();
 
                 return 0;
             }
             catch (Exception e)
             {
+                _shutdownBlock.Set();
                 Console.WriteLine(e.Message);
                 Console.WriteLine();
                 Console.WriteLine("Try `nyancat --help' for more information.");

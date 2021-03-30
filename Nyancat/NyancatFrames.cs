@@ -4,7 +4,6 @@ namespace Nyancat
     {
         public const int FRAME_WIDTH = 64;
         public const int FRAME_HEIGHT = 64;
-
         public const int TOTAL_FRAMES = 11;
 
         public static string GetFrame(int id) =>

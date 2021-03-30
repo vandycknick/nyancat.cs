@@ -9,6 +9,8 @@
 
     <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
+
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <Import Project="../Native.Build.props" />

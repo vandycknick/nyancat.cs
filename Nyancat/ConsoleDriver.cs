@@ -1,27 +1,20 @@
 using System;
 using System.Buffers;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using static Nyancat.Win32Api;
 
 namespace Nyancat
 {
-    public struct ConsoleGraphics : IDisposable
+    public struct ConsoleDriver : IDisposable
     {
         private const int DEFAULT_BUFFER_SIZE = 32768; // use 32K default buffer.
-
-        private const string HIDE_CURSOR = "\x1b[?25l";
-        private const string RESET_CURSOR = "\x1b[H";
-        private const string SHOW_CURSOR = "\x1b[?25h";
-        private const string CLEAR_SCREEN = "\x1b[2J";
-        private const string RESET_ALL_ATTRIBUTES = "\x1b[0m";
 
         private static char newLine1;
         private static char newLine2;
         private static bool crlf;
 
-        static ConsoleGraphics()
+        static ConsoleDriver()
         {
             var newLine = Environment.NewLine.ToCharArray();
             if (newLine.Length == 1)
@@ -48,16 +41,11 @@ namespace Nyancat
 
         private bool _buffered;
 
-        public string Title
-        {
-            set => Console.Title = value;
-        }
-
         public int Width => Console.WindowWidth;
 
         public int Height => Console.WindowHeight;
 
-        public ConsoleGraphics(bool buffered = true)
+        public ConsoleDriver(bool buffered = true)
         {
             _buffered = buffered;
             _index = 0;
@@ -73,6 +61,11 @@ namespace Nyancat
 
             // Windows only
             EnableVTMode();
+        }
+
+        public void SetTitle(string title)
+        {
+            Console.Title = title;
         }
 
         private void Grow(int sizeHint)
@@ -159,55 +152,14 @@ namespace Nyancat
 
         private void Reset() => _index = 0;
 
-        public ConsoleGraphics HideCursor()
-        {
-            if (SupportsAnsi()) Write(HIDE_CURSOR);
-            return this;
-        }
-
-        public ConsoleGraphics ResetCursor()
-        {
-            if (SupportsAnsi())
-            {
-                Write(RESET_CURSOR);
-            }
-            else
-            {
-                Console.CursorTop = 0;
-                Console.CursorLeft = 0;
-            }
-            return this;
-        }
-
-        public ConsoleGraphics ColorBrightWhite()
-        {
-            if (SupportsAnsi()) Write("\x1b[1;37m");
-            return this;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private Boolean SupportsAnsi() => ConsoleColorSupport.Level != ColorSupportLevel.None;
-
         public void Dispose()
         {
             // Windows only
             RestoreConsoleMode();
             RestoreConsoleCursorInfo();
 
-            // Restore Console
-            if (ConsoleColorSupport.Level == ColorSupportLevel.None)
-            {
-                Console.Clear();
-            }
-            else
-            {
-                Write($"{SHOW_CURSOR}{RESET_ALL_ATTRIBUTES}{RESET_CURSOR}{CLEAR_SCREEN}");
-                WriteLine();
-                Flush();
-            }
-
             // Return buffer
-            if (_buffer != null)
+            if (_buffer is object)
             {
                 ArrayPool<char>.Shared.Return(_buffer);
             }

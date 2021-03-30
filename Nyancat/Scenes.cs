@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Nyancat
 {
@@ -14,8 +13,6 @@ namespace Nyancat
         private int _fc;
         private long _startTime;
 
-        private Dictionary<char, string> _colors;
-
         public NyancatScene(int frames = int.MaxValue, int showCounter = 1)
         {
             _frames = frames;
@@ -28,7 +25,6 @@ namespace Nyancat
             _fc = int.MinValue;
             _startTime = long.MinValue;
 
-            _colors = GetColors();
 
             CalculateRowsAndCols(width: _width, height: _height);
         }
@@ -76,7 +72,27 @@ namespace Nyancat
             return true;
         }
 
-        public void Render(ref ConsoleGraphics console)
+        private Color AsciiPixelToColor(char ch) =>
+            ch switch
+            {
+                ',' => Color.Blue,
+                '.' => Color.White,
+                '\'' => Color.Black,
+                '@' => Color.Tan,
+                '$' => Color.Pink,
+                '-' => Color.DarkRed,
+                '>' => Color.Red,
+                '&' => Color.Orange,
+                '+' => Color.Yellow,
+                '#' => Color.Green,
+                '=' => Color.LightBlue,
+                ';' => Color.DarkBlue,
+                '*' => Color.Gray,
+                '%' => Color.LightPink,
+                _ => Color.Blue
+            };
+
+        public void Render(ref AnsiConsole console)
         {
             ReadOnlySpan<char> frame = NyancatFrames.GetFrame(_fc);
             var lastPixel = char.MinValue;
@@ -116,17 +132,16 @@ namespace Nyancat
                         pixel = frame.Slice(start, 1)[0];
                     }
 
-                    if (ConsoleColorSupport.Level == ColorSupportLevel.None)
+                    if (!console.SupportsColors())
                     {
-                        lastPixel = pixel;
-                        console.Write(_colors[pixel]);
-                        console.Write(_colors[pixel]);
+                        console.Write(pixel);
+                        console.Write(pixel);
+
                     }
-                    else if (pixel != lastPixel && _colors.ContainsKey(pixel))
+                    else if (pixel != lastPixel)
                     {
-                        lastPixel = pixel;
-                        console.Write(_colors[pixel]);
-                        console.Write(' ');
+                        var color = AsciiPixelToColor(pixel);
+                        console.WriteColor(' ', color);
                         console.Write(' ');
                     }
                     else
@@ -150,100 +165,14 @@ namespace Nyancat
                 {
                     for (var i = 0; i < spacesLength; i++)
                     {
-                        console.Write(ConsoleColorSupport.Level == ColorSupportLevel.None ? ',' : ' ');
+                        console.Write(console.SupportsColors() ? ' ' : ',');
                     }
 
-                    console.ColorBrightWhite();
-                    console.Write(message);
+                    console.WriteColor(message, Color.White, foreground: true);
                     console.WriteLine("\x1b[J\x1b[0m");
                 }
             }
         }
-
-        private static Dictionary<char, string> GetColors()
-        {
-            if (ConsoleColorSupport.Level.HasFlag(ColorSupportLevel.TrueColor))
-            {
-                return new Dictionary<char, string>
-                {
-                    { ','  , "\x1b[48;2;0;0;95m" },         /* Blue background */
-                    { '.'  , "\x1b[48;2;255;255;255m" },    /* White stars */
-                    { '\'' , "\x1b[48;2;0;0;0m" },          /* Black border */
-                    { '@'  , "\x1b[48;2;255;255;215m" },    /* Tan poptart */
-                    { '$'  , "\x1b[48;2;255;192;203m" },    /* Pink poptart */
-                    { '-'  , "\x1b[48;2;215;0;135m" },      /* Red poptart */
-                    { '>'  , "\x1b[48;2;255;0;0m" },        /* Red rainbow */
-                    { '&'  , "\x1b[48;2;255;165;0m" },      /* Orange rainbow */
-                    { '+'  , "\x1b[48;2;255;255;0m" },      /* Yellow Rainbow */
-                    { '#'  , "\x1b[48;2;135;255;0m" },      /* Green rainbow */
-                    { '='  , "\x1b[48;2;0;135;255m" },      /* Light blue rainbow */
-                    { ';'  , "\x1b[48;2;0;0;175m" },        /* Dark blue rainbow */
-                    { '*'  , "\x1b[48;2;88;88;88m" },       /* Gray cat face */
-                    { '%'  , "\x1b[48;2;215;135;175m" },    /* Pink cheeks */
-                };
-            }
-            else if (ConsoleColorSupport.Level.HasFlag(ColorSupportLevel.Ansi256))
-            {
-                return new Dictionary<char, string>
-                {
-                    { ','  , "\x1b[48;5;17m" },  /* Blue background */
-                    { '.'  , "\x1b[48;5;231m" }, /* White stars */
-                    { '\'' , "\x1b[48;5;16m" },  /* Black border */
-                    { '@'  , "\x1b[48;5;230m" }, /* Tan poptart */
-                    { '$'  , "\x1b[48;5;175m" }, /* Pink poptart */
-                    { '-'  , "\x1b[48;5;162m" }, /* Red poptart */
-                    { '>'  , "\x1b[48;5;196m" }, /* Red rainbow */
-                    { '&'  , "\x1b[48;5;214m" }, /* Orange rainbow */
-                    { '+'  , "\x1b[48;5;226m" }, /* Yellow Rainbow */
-                    { '#'  , "\x1b[48;5;118m" }, /* Green rainbow */
-                    { '='  , "\x1b[48;5;33m" },  /* Light blue rainbow */
-                    { ';'  , "\x1b[48;5;19m" },  /* Dark blue rainbow */
-                    { '*'  , "\x1b[48;5;240m" }, /* Gray cat face */
-                    { '%'  , "\x1b[48;5;175m" }, /* Pink cheeks */
-                };
-            }
-            else if (ConsoleColorSupport.Level.HasFlag(ColorSupportLevel.Basic))
-            {
-                return new Dictionary<char, string>
-                {
-                    { ',' , "\x1b[104m" }, /* Blue background */
-                    { '.' , "\x1b[107m" }, /* White stars */
-                    { '\'' , "\x1b[40m" }, /* Black border */
-                    { '@' , "\x1b[47m" },  /* Tan poptart */
-                    { '$' , "\x1b[105m" }, /* Pink poptart */
-                    { '-' , "\x1b[101m" }, /* Red poptart */
-                    { '>' , "\x1b[101m" }, /* Red rainbow */
-                    { '&' , "\x1b[43m" },  /* Orange rainbow */
-                    { '+' , "\x1b[103m" }, /* Yellow Rainbow */
-                    { '#' , "\x1b[102m" }, /* Green rainbow */
-                    { '=' , "\x1b[104m" }, /* Light blue rainbow */
-                    { ';' , "\x1b[44m" },  /* Dark blue rainbow */
-                    { '*' , "\x1b[100m" }, /* Gray cat face */
-                    { '%' , "\x1b[105m" }, /* Pink cheeks */
-                };
-            }
-            else
-            {
-                return new Dictionary<char, string>
-                {
-                    { ','  , "," }, /* Blue background */
-                    { '.'  , "." }, /* White stars */
-                    { '\'' , "'" }, /* Black border */
-                    { '@'  , "@" }, /* Tan poptart */
-                    { '$'  , "$" }, /* Pink poptart */
-                    { '-'  , "-" }, /* Red poptart */
-                    { '>'  , ">" }, /* Red rainbow */
-                    { '&'  , "&" }, /* Orange rainbow */
-                    { '+'  , "+" }, /* Yellow Rainbow */
-                    { '#'  , "#" }, /* Green rainbow */
-                    { '='  , "=" }, /* Light blue rainbow */
-                    { ';'  , ";" }, /* Dark blue rainbow */
-                    { '*'  , "*" }, /* Gray cat face */
-                    { '%'  , "%" }, /* Pink cheeks */
-                };
-            }
-        }
-
     }
 
     public struct IntroScene : IScene
@@ -270,7 +199,7 @@ namespace Nyancat
             return (TIME_TO_SHOW - _totalTimeInSeconds) > 0;
         }
 
-        public void Render(ref ConsoleGraphics console)
+        public void Render(ref AnsiConsole console)
         {
             WriteBlankLine(ref console);
             WriteBlankLine(ref console);
@@ -294,9 +223,9 @@ namespace Nyancat
             console.Flush();
         }
 
-        public void WriteBlankLine(ref ConsoleGraphics console) => console.WriteLine("\x1b[48;5;16m\x1b[K");
+        public void WriteBlankLine(ref AnsiConsole console) => console.WriteLine("\x1b[48;5;16m\x1b[K");
 
-        public void WriteLineCentered(string message, ref ConsoleGraphics console)
+        public void WriteLineCentered(string message, ref AnsiConsole console)
         {
             console.Write("\x1b[48;5;16m\x1b[38;5;15m");
             WriteCentered(message, ref console);
@@ -304,7 +233,7 @@ namespace Nyancat
             console.WriteLine();
         }
 
-        public void WriteCentered(string message, ref ConsoleGraphics console)
+        public void WriteCentered(string message, ref AnsiConsole console)
         {
             var spacesLength = (_width - message.Length) / 2;
 
@@ -324,6 +253,6 @@ namespace Nyancat
     interface IScene
     {
         bool Update(int width, int height);
-        void Render(ref ConsoleGraphics console);
+        void Render(ref AnsiConsole console);
     }
 }

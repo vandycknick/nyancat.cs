@@ -94,8 +94,8 @@ namespace Nyancat
 
         public void Render(ref AnsiConsole console)
         {
-            ReadOnlySpan<char> frame = NyancatFrames.GetFrame(_fc);
-            var lastPixel = char.MinValue;
+            string frame = NyancatFrames.GetFrame(_fc);
+            var lastPixel = 0x00;
 
             for (var row = _minRow; row < _maxRow; ++row)
             {
@@ -129,7 +129,7 @@ namespace Nyancat
 
                         start += col;
 
-                        pixel = frame.Slice(start, 1)[0];
+                        pixel = frame[start + 1];
                     }
 
                     if (!console.SupportsColors())
@@ -158,7 +158,8 @@ namespace Nyancat
             if (_showCounter == 1)
             {
                 var totalTime = (Environment.TickCount64 - _startTime) / 1000;
-                var message = string.Concat("You have nyaned for ", totalTime, " seconds!");
+                // var message = "You have nyaned for " + totalTime + " seconds!";
+                var message = "You have nyaned for 0 seconds";
                 var spacesLength = (_width - message.Length) / 2;
 
                 if (spacesLength > 0)
@@ -175,80 +176,80 @@ namespace Nyancat
         }
     }
 
-    public struct IntroScene : IScene
-    {
-        private const int TIME_TO_SHOW = 5;
-        private bool _initialized;
-        private long _startedAt;
-        private long _totalTimeInSeconds;
-        private int _width;
-        private int _height;
+    // public struct IntroScene : IScene
+    // {
+    //     private const int TIME_TO_SHOW = 5;
+    //     private bool _initialized;
+    //     private long _startedAt;
+    //     private long _totalTimeInSeconds;
+    //     private int _width;
+    //     private int _height;
 
-        public bool Update(int width, int height)
-        {
-            if (_initialized == false)
-            {
-                _initialized = true;
-                _startedAt = Environment.TickCount64;
-            }
+    //     public bool Update(int width, int height)
+    //     {
+    //         if (_initialized == false)
+    //         {
+    //             _initialized = true;
+    //             _startedAt = Environment.TickCount64;
+    //         }
 
-            _width = width;
-            _height = height;
+    //         _width = width;
+    //         _height = height;
 
-            _totalTimeInSeconds = (Environment.TickCount64 - _startedAt) / 1000;
-            return (TIME_TO_SHOW - _totalTimeInSeconds) > 0;
-        }
+    //         _totalTimeInSeconds = (Environment.TickCount64 - _startedAt) / 1000;
+    //         return (TIME_TO_SHOW - _totalTimeInSeconds) > 0;
+    //     }
 
-        public void Render(ref AnsiConsole console)
-        {
-            WriteBlankLine(ref console);
-            WriteBlankLine(ref console);
-            WriteBlankLine(ref console);
-            WriteBlankLine(ref console);
+    //     public void Render(ref AnsiConsole console)
+    //     {
+    //         WriteBlankLine(ref console);
+    //         WriteBlankLine(ref console);
+    //         WriteBlankLine(ref console);
+    //         WriteBlankLine(ref console);
 
-            WriteLineCentered("Nyancat Dotnet Core", ref console);
-            WriteLineCentered("written by Nick Van Dyck @vandycknick", ref console);
-            WriteBlankLine(ref console);
-            WriteLineCentered("Found any issues?", ref console);
-            WriteLineCentered("Please report here: https://github.com/nickvdyck/nyancat.cs/issues", ref console);
+    //         WriteLineCentered("Nyancat Dotnet Core", ref console);
+    //         WriteLineCentered("written by Nick Van Dyck @vandycknick", ref console);
+    //         WriteBlankLine(ref console);
+    //         WriteLineCentered("Found any issues?", ref console);
+    //         WriteLineCentered("Please report here: https://github.com/nickvdyck/nyancat.cs/issues", ref console);
 
-            var timeLeft = string.Concat("Starting in ", TIME_TO_SHOW - _totalTimeInSeconds, "...");
-            WriteLineCentered(timeLeft, ref console);
+    //         var timeLeft = string.Concat("Starting in ", TIME_TO_SHOW - _totalTimeInSeconds, "...");
+    //         WriteLineCentered(timeLeft, ref console);
 
-            for (var i = 10; i < _height; i++)
-            {
-                WriteBlankLine(ref console);
-            }
+    //         for (var i = 10; i < _height; i++)
+    //         {
+    //             WriteBlankLine(ref console);
+    //         }
 
-            console.Flush();
-        }
+    //         console.Flush();
+    //     }
 
-        public void WriteBlankLine(ref AnsiConsole console) => console.WriteLine("\x1b[48;5;16m\x1b[K");
+    //     public void WriteBlankLine(ref AnsiConsole console) => console.WriteLine("\x1b[48;5;16m\x1b[K");
 
-        public void WriteLineCentered(string message, ref AnsiConsole console)
-        {
-            console.Write("\x1b[48;5;16m\x1b[38;5;15m");
-            WriteCentered(message, ref console);
-            console.Write("\x1b[48;5;16m\x1b[K");
-            console.WriteLine();
-        }
+    //     public void WriteLineCentered(string message, ref AnsiConsole console)
+    //     {
+    //         console.Write("\x1b[48;5;16m\x1b[38;5;15m");
+    //         WriteCentered(message, ref console);
+    //         console.Write("\x1b[48;5;16m\x1b[K");
+    //         console.WriteLine();
+    //     }
 
-        public void WriteCentered(string message, ref AnsiConsole console)
-        {
-            var spacesLength = (_width - message.Length) / 2;
+    //     public void WriteCentered(string message, ref AnsiConsole console)
+    //     {
+    //         var spacesLength = (_width - message.Length) / 2;
 
-            if (message.Length < _width)
-            {
-                for (var i = 0; i < spacesLength; i++) console.Write(' ');
+    //         if (message.Length < _width)
+    //         {
+    //             for (var i = 0; i < spacesLength; i++) console.Write(' ');
 
-                foreach (var ch in message) console.Write(ch);
-            }
-            else
-            {
-                WriteBlankLine(ref console);
-            }
-        }
-    }
+    //             foreach (var ch in message) console.Write(ch);
+    //         }
+    //         else
+    //         {
+    //             WriteBlankLine(ref console);
+    //         }
+    //     }
+    // }
 
     interface IScene
     {

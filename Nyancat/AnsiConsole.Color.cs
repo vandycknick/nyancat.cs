@@ -50,7 +50,7 @@ namespace Nyancat
         private void WriteTrueColor(Color color, bool foreground)
         {
             var mod = foreground ? (byte)38 : (byte)48;
-            _console.Write($"\x1b[{mod};2;{color.R};{color.G};{color.B}m");
+            // _console.Write($"\x1b[{mod};2;{color.R};{color.G};{color.B}m");
         }
 
         private void WriteEightBitColor(Color color, bool foreground)
@@ -59,7 +59,7 @@ namespace Nyancat
             Debug.Assert(number >= 0 && number <= 255, "Invalid range for 8-bit color");
 
             var mod = foreground ? (byte)38 : (byte)48;
-            _console.Write($"\x1b[{mod};5;{number}m");
+            // _console.Write($"\x1b[{mod};5;{number}m");
         }
 
         private void WriteFourBitColor(Color color, bool foreground)
@@ -70,7 +70,10 @@ namespace Nyancat
             Debug.Assert(number >= 0 && number < 16, "Invalid range for 4-bit color");
 
             var mod = number < 8 ? (foreground ? 30 : 40) : (foreground ? 82 : 92);
-            _console.Write($"\x1b[{number + mod}m");
+            // _console.Write($"\x1b[{number + mod}m");
+            _console.Write("\x1b[");
+            _console.Write((char)(number + mod));
+            _console.Write("m");
         }
 
         private static int ColorTo6Cube(int color)

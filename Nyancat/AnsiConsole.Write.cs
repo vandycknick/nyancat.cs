@@ -9,7 +9,13 @@ namespace Nyancat
             _console.Write(ch);
             return this;
         }
-        public AnsiConsole Write(ReadOnlySpan<char> value)
+        // public AnsiConsole Write(ReadOnlySpan<char> value)
+        // {
+        //     _console.Write(value);
+        //     return this;
+        // }
+
+        public AnsiConsole Write(string value)
         {
             _console.Write(value);
             return this;
@@ -17,7 +23,7 @@ namespace Nyancat
 
         public AnsiConsole WriteLine(string value)
         {
-            _console.WriteLine(value.ToString());
+            _console.WriteLine(value);
             return this;
         }
 

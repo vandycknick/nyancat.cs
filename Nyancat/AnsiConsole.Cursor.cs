@@ -22,8 +22,8 @@ namespace Nyancat
             }
             else
             {
-                System.Console.CursorTop = 0;
-                System.Console.CursorLeft = 0;
+                // System.Console.CursorTop = 0;
+                // System.Console.CursorLeft = 0;
             }
             return this;
         }

@@ -44,7 +44,7 @@ package-native:
 		--output $(BUILD)/publish/$(RUNTIME) \
 		--runtime $(RUNTIME) \
 		 --framework net5.0 \
-		/p:Mode=CoreRT-ReflectionFree
+		/p:Mode=CoreRT-NoRuntime
 
 	@mkdir -p $(ARTIFACTS)
 	@strip $(BUILD)/publish/$(RUNTIME)/$(CLI_TOOL)

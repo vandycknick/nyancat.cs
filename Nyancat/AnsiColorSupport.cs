@@ -1,12 +1,12 @@
 using System;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
+// using System.Text.RegularExpressions;
 
 namespace Nyancat
 {
     internal static class AnsiColorSupport
     {
-        private static Regex _versionRegex = new Regex("^Microsoft Windows (?'major'[0-9]*).(?'minor'[0-9]*).(?'build'[0-9]*)\\s*$");
+        // private static Regex _versionRegex = new Regex("^Microsoft Windows (?'major'[0-9]*).(?'minor'[0-9]*).(?'build'[0-9]*)\\s*$");
 
         /// <summary>
         /// Detect colort support
@@ -16,42 +16,44 @@ namespace Nyancat
         /// </summary>
         public static ColorSupport Detect(bool supportsAnsi)
         {
-            if (Environment.GetEnvironmentVariables().Contains("NO_COLOR"))
-            {
-                // No colors supported
-                return ColorSupport.NoColors;
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                if (supportsAnsi)
-                {
-                    var match = _versionRegex.Match(RuntimeInformation.OSDescription);
-                    if (match.Success && int.TryParse(match.Groups["major"].Value, out var major))
-                    {
-                        if (major > 10)
-                        {
-                            return ColorSupport.TrueColor;
-                        }
+            // if (Environment.GetEnvironmentVariables().Contains("NO_COLOR"))
+            // {
+            //     // No colors supported
+            //     return ColorSupport.NoColors;
+            // }
+            // else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            // {
+            //     if (supportsAnsi)
+            //     {
+            //         // var match = _versionRegex.Match(RuntimeInformation.OSDescription);
+            //         // if (match.Success && int.TryParse(match.Groups["major"].Value, out var major))
+            //         // {
+            //         //     if (major > 10)
+            //         //     {
+            //         //         return ColorSupport.TrueColor;
+            //         //     }
 
-                        if (major == 10 && int.TryParse(match.Groups["build"].Value, out var build) && build >= 15063)
-                        {
-                            return ColorSupport.TrueColor;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                var colorTerm = Environment.GetEnvironmentVariable("COLORTERM");
-                if (!string.IsNullOrWhiteSpace(colorTerm))
-                {
-                    if (colorTerm.Equals("truecolor", StringComparison.OrdinalIgnoreCase) ||
-                       colorTerm.Equals("24bit", StringComparison.OrdinalIgnoreCase))
-                    {
-                        return ColorSupport.TrueColor;
-                    }
-                }
-            }
+            //         //     if (major == 10 && int.TryParse(match.Groups["build"].Value, out var build) && build >= 15063)
+            //         //     {
+            //         //         return ColorSupport.TrueColor;
+            //         //     }
+            //         // }
+
+            //         return ColorSupport.TrueColor;
+            //     }
+            // }
+            // else
+            // {
+            //     var colorTerm = Environment.GetEnvironmentVariable("COLORTERM");
+            //     if (!string.IsNullOrWhiteSpace(colorTerm))
+            //     {
+            //         if (colorTerm.Equals("truecolor", StringComparison.OrdinalIgnoreCase) ||
+            //            colorTerm.Equals("24bit", StringComparison.OrdinalIgnoreCase))
+            //         {
+            //             return ColorSupport.TrueColor;
+            //         }
+            //     }
+            // }
 
             return ColorSupport.EightBit;
         }

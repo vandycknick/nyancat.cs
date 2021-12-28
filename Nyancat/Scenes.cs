@@ -210,7 +210,7 @@ namespace Nyancat
             WriteLineCentered("written by Nick Van Dyck @vandycknick", ref console);
             WriteBlankLine(ref console);
             WriteLineCentered("Found any issues?", ref console);
-            WriteLineCentered("Please report here: https://github.com/nickvdyck/nyancat.cs/issues", ref console);
+            WriteLineCentered("Please report here: https://github.com/vandycknick/nyancat.cs/issues", ref console);
 
             var timeLeft = string.Concat("Starting in ", TIME_TO_SHOW - _totalTimeInSeconds, "...");
             WriteLineCentered(timeLeft, ref console);

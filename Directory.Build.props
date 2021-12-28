@@ -8,16 +8,16 @@
     <NeutralLanguage>en-UK</NeutralLanguage>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/nickvdyck/nyancat.cs</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/nickvdyck/nyancat.cs.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/vandycknick/nyancat.cs</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vandycknick/nyancat.cs.git</RepositoryUrl>
     <PackageReleaseNotes>See $(PackageProjectUrl)/blob/master/CHANGELOG.md for release notes.</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
-    
+
     <LangVersion>Latest</LangVersion>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Deterministic>true</Deterministic>
-    
+
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateFullPaths Condition="'$(VSCODE_CWD)' != ''">true</GenerateFullPaths>
     <BuildDirectory>$(MSBuildThisFileDirectory).build/</BuildDirectory>

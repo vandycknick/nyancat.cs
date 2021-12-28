@@ -6,6 +6,7 @@ CONFIGURATION	:= Release
 CLI_PROJECT		:= Nyancat/Nyancat.csproj
 CLI_TOOL		:= nyancat
 RUNTIME 		:= linux-x64
+FRAMEWORK		:= net6.0
 
 .PHONY: purge
 purge: clean
@@ -18,7 +19,7 @@ clean:
 
 .PHONY: run
 run:
-	dotnet run --project $(CLI_PROJECT) --framework net5.0
+	dotnet run --project $(CLI_PROJECT) --framework $(FRAMEWORK)
 
 .PHONY: restore
 restore:
@@ -41,14 +42,17 @@ package:
 package-native:
 	# Prereqs: https://github.com/dotnet/runtimelab/blob/feature/NativeAOT/samples/prerequisites.md#ubuntu-1604
 	dotnet publish $(CLI_PROJECT) -c $(CONFIGURATION) \
+		--nologo \
 		--output $(BUILD)/publish/$(RUNTIME) \
 		--runtime $(RUNTIME) \
-		 --framework net5.0 \
-		/p:Mode=CoreRT-ReflectionFree
+		--framework $(FRAMEWORK) \
+		--self-contained true \
+		-p:Mode=CoreRT-ReflectionFree
 
 	@mkdir -p $(ARTIFACTS)
-	@strip $(BUILD)/publish/$(RUNTIME)/$(CLI_TOOL)
 	@cp $(BUILD)/publish/$(RUNTIME)/$(CLI_TOOL) $(ARTIFACTS)/$(CLI_TOOL).$(RUNTIME)
+	@strip $(ARTIFACTS)/$(CLI_TOOL).$(RUNTIME)
+	@upx --best $(ARTIFACTS)/$(CLI_TOOL).$(RUNTIME)
 
 .PHONY: install
 install:

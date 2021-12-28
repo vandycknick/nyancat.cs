@@ -1,7 +1,7 @@
 <Project>
 
   <ItemGroup Condition="'$(Mode)' != ''">
-    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="6.0.0-*" />
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-*" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Mode)' == 'CoreRT-Moderate' or '$(Mode)' == 'CoreRT-High' or '$(Mode)' == 'CoreRT-ReflectionFree'">
@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Mode)' == 'CoreRT-High' or '$(Mode)' == 'CoreRT-ReflectionFree'">
+    <InvariantGlobalization>true</InvariantGlobalization>
     <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
-    <IlcInvariantGlobalization>true</IlcInvariantGlobalization>
     <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
   </PropertyGroup>
 
@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Mode)' == 'CoreRT-ReflectionFree'">
+    <IlcTrimMetadata>true</IlcTrimMetadata>
     <IlcDisableReflection>true</IlcDisableReflection>
   </PropertyGroup>
 

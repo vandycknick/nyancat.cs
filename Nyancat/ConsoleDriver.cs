@@ -61,6 +61,9 @@ namespace Nyancat
 
             // Windows only
             EnableVTMode();
+
+            // Switch to alternate buffer
+            StartAlternateBuffer();
         }
 
         public void SetTitle(string title)
@@ -142,6 +145,19 @@ namespace Nyancat
             }
         }
 
+        public void StartAlternateBuffer()
+        {
+            Console.Out.Write("\x1b[?1049h");
+            Console.Out.Flush();
+        }
+
+        public void RestoreBuffer()
+        {
+            // Switch out of alternative buffer
+            Console.Out.Write("\x1b[?1049h");
+            Console.Out.Flush();
+        }
+
         public void Flush()
         {
             if (_index == 0) return;
@@ -157,6 +173,9 @@ namespace Nyancat
             // Windows only
             RestoreConsoleMode();
             RestoreConsoleCursorInfo();
+
+            // Restore Console Buffer
+            RestoreBuffer();
 
             // Return buffer
             if (_buffer is object)

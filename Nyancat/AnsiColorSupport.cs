@@ -13,6 +13,7 @@ namespace Nyancat
         ///
         /// A mish mash from:
         /// - https://github.com/willmcgugan/rich/blob/f0c29052c22d1e49579956a9207324d9072beed7/rich/console.py#L391
+        /// - https://github.com/termstandard/colors
         /// </summary>
         public static ColorSupport Detect(bool supportsAnsi)
         {
@@ -23,37 +24,53 @@ namespace Nyancat
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                if (supportsAnsi)
+                if (!supportsAnsi)
                 {
-                    var match = _versionRegex.Match(RuntimeInformation.OSDescription);
-                    if (match.Success && int.TryParse(match.Groups["major"].Value, out var major))
-                    {
-                        if (major > 10)
-                        {
-                            return ColorSupport.TrueColor;
-                        }
-
-                        if (major == 10 && int.TryParse(match.Groups["build"].Value, out var build) && build >= 15063)
-                        {
-                            return ColorSupport.TrueColor;
-                        }
-                    }
+                    return ColorSupport.NoColors;
                 }
-            }
-            else
-            {
-                var colorTerm = Environment.GetEnvironmentVariable("COLORTERM");
-                if (!string.IsNullOrWhiteSpace(colorTerm))
+
+                var match = _versionRegex.Match(RuntimeInformation.OSDescription);
+                if (match.Success && int.TryParse(match.Groups["major"].Value, out var major))
                 {
-                    if (colorTerm.Equals("truecolor", StringComparison.OrdinalIgnoreCase) ||
-                       colorTerm.Equals("24bit", StringComparison.OrdinalIgnoreCase))
+                    if (major > 10)
+                    {
+                        return ColorSupport.TrueColor;
+                    }
+
+                    if (major == 10 && int.TryParse(match.Groups["build"].Value, out var build) && build >= 15063)
                     {
                         return ColorSupport.TrueColor;
                     }
                 }
-            }
 
-            return ColorSupport.EightBit;
+                return ColorSupport.Standard;
+            }
+            else
+            {
+                var colorTerm = (Environment.GetEnvironmentVariable("COLORTERM") ?? "").ToLower();
+                var colorSupport = colorTerm switch
+                {
+                    "truecolor" => ColorSupport.TrueColor,
+                    "24bit" => ColorSupport.TrueColor,
+                    _ => DetectSupportFromTerm(),
+                };
+
+                return colorSupport;
+            }
+        }
+
+        private static ColorSupport DetectSupportFromTerm()
+        {
+            var term = (Environment.GetEnvironmentVariable("TERM") ?? "").ToLower();
+
+            return term switch
+            {
+                string t when t.StartsWith("xterm") => ColorSupport.EightBit, // 256-color, spaces
+                string t when t.StartsWith("toaru") => ColorSupport.EightBit, // Emulates xterm
+                string t when t.StartsWith("linux") => ColorSupport.Legacy, // spaces and blink attribute
+                "st-256color" => ColorSupport.EightBit, // suckless simple terminal is xterm-256color compatible
+                _ => ColorSupport.Standard,
+            };
         }
     }
 

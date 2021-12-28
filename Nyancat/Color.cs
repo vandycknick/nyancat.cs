@@ -12,6 +12,14 @@ namespace Nyancat
         public int G { get; set; }
         public int B { get; set; }
 
+        public override bool Equals(object obj) => obj is Color other &&
+            this.R == other.R && this.G == other.G && this.B == other.B;
+
+        public override int GetHashCode() => (R, G, B).GetHashCode();
+
+        public static bool operator ==(Color colorA, Color colorB) => colorA.Equals(colorB);
+        public static bool operator !=(Color colorA, Color colorB) => !(colorA == colorB);
+
         public static Color FromRgb(int r, int g, int b) =>
             new Color(r, g, b);
 

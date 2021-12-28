@@ -40,6 +40,9 @@ namespace Nyancat
                 case ColorSupport.Standard:
                     WriteFourBitColor(color, foreground);
                     break;
+                case ColorSupport.Legacy:
+                    WriteThreeBitColor(color, foreground);
+                    break;
                 default:
                     break;
             }
@@ -64,14 +67,65 @@ namespace Nyancat
 
         private void WriteFourBitColor(Color color, bool foreground)
         {
-            var number = ScaleColorToEightBit(color);
-            number = ScaleEightBitToFourBit(number);
+            var number = 0;
 
-            Debug.Assert(number >= 0 && number < 16, "Invalid range for 4-bit color");
+            if (color == Color.Black) number = 30;
+            else if (color == Color.Red) number = 31;
+            else if (color == Color.DarkRed) number = 31;
+            else if (color == Color.Green) number = 32;
+            else if (color == Color.Orange) number = 33;
+            else if (color == Color.DarkBlue) number = 34;
+            else if (color == Color.Pink) number = 35;
+            else if (color == Color.White) number = 37;
 
-            var mod = number < 8 ? (foreground ? 30 : 40) : (foreground ? 82 : 92);
-            _console.Write($"\x1b[{number + mod}m");
+            else if (color == Color.Gray) number = 90;
+            else if (color == Color.Yellow) number = 93;
+            else if (color == Color.Tan) number = 97;
+            else if (color == Color.Blue) number = 94;
+            else if (color == Color.LightBlue) number = 94;
+            else if (color == Color.LightPink) number = 95;
+
+            var cc = 0;
+            if (number == 0)
+            {
+                number = ScaleColorToEightBit(color);
+                number = ScaleEightBitToFourBit(number);
+                Debug.Assert(number >= 0 && number < 16, "Invalid range for 4-bit color");
+
+                var mod = number < 8 ? (foreground ? 30 : 40) : (foreground ? 82 : 92);
+                cc = number + mod;
+            }
+            else
+            {
+                cc = number + (foreground ? 0 : 10);
+            }
+
+            _console.Write($"\x1b[{cc}m");
         }
+
+        private void WriteThreeBitColor(Color color, bool foreground)
+        {
+            var code = "";
+
+            if (color == Color.Black) code = "25;40";
+            else if (color == Color.Red) code = "5;41";
+            else if (color == Color.DarkRed) code = "5;41";
+            else if (color == Color.Green) code = "5;42";
+            else if (color == Color.Orange) code = "25;43";
+            else if (color == Color.DarkBlue) code = "5;44";
+            else if (color == Color.Pink) code = "5;45";
+            else if (color == Color.White) code = "5;47";
+            else if (color == Color.Gray) code = "5;40";
+            else if (color == Color.Yellow) code = "5;43";
+            else if (color == Color.Tan) code = "5;47";
+            else if (color == Color.Blue) code = "25;44";
+            else if (color == Color.LightBlue) code = "25;44";
+            else if (color == Color.LightPink) code = "25;45";
+            else code = "5;40";
+
+            _console.Write($"\x1b[{code}m");
+        }
+
 
         private static int ColorTo6Cube(int color)
         {

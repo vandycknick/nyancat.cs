@@ -5,8 +5,8 @@ BUILD			:= $(shell pwd)/.build
 CONFIGURATION	:= Release
 CLI_PROJECT		:= Nyancat/Nyancat.csproj
 CLI_TOOL		:= nyancat
-RUNTIME 		:= linux-x64
-FRAMEWORK		:= net6.0
+RUNTIME 		:= osx-arm64
+FRAMEWORK		:= net9.0
 
 .PHONY: purge
 purge: clean
@@ -47,12 +47,15 @@ package-native:
 		--runtime $(RUNTIME) \
 		--framework $(FRAMEWORK) \
 		--self-contained true \
-		-p:Mode=CoreRT-ReflectionFree
+		-p:PublishSingleFile=true \
+		-p:PublishTrimmed=true \
+		-p:EnableCompressionInSingleFile=true \
+		-p:PublishAot=true
 
 	@mkdir -p $(ARTIFACTS)
 	@cp $(BUILD)/publish/$(RUNTIME)/$(CLI_TOOL) $(ARTIFACTS)/$(CLI_TOOL).$(RUNTIME)
-	@strip $(ARTIFACTS)/$(CLI_TOOL).$(RUNTIME)
-	@upx --best $(ARTIFACTS)/$(CLI_TOOL).$(RUNTIME)
+	# @strip $(ARTIFACTS)/$(CLI_TOOL).$(RUNTIME)
+	# @upx --best $(ARTIFACTS)/$(CLI_TOOL).$(RUNTIME)
 
 .PHONY: install
 install:
